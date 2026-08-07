@@ -1,0 +1,12 @@
+# Dependencies
+node_modules/
+
+# Production Builds & Release Executables
+dist/
+dist-electron/
+release/
+
+# System Files
+.DS_Store
+Thumbs.db
+*.log
