@@ -39,8 +39,8 @@
 
 | Executable Package | Description | Download |
 | :--- | :--- | :--- |
-| **Harmonix Standard Installer** | Standard Windows setup installer. Adds Harmonix to your **Windows Start Menu** and **Desktop**. | [Download `.exe`](./release/Harmonix-Standard-Installer.exe) |
-| **Harmonix Standalone Portable** | Portable single-file executable. Runs instantly anywhere **without installation**. | [Download `.exe`](./release/Harmonix-Standalone-Portable.exe) |
+| **Harmonix Standard Installer** | Standard Windows setup installer. Adds Harmonix to your **Windows Start Menu** and **Desktop**. | [Download `.exe`](https://github.com/zinkopiyush/harmonix/releases/download/v1.0.0/Harmonix-Standard-Installer.exe) |
+| **Harmonix Standalone Portable** | Portable single-file executable. Runs instantly anywhere **without installation**. | [Download `.exe`](https://github.com/zinkopiyush/harmonix/releases/download/v1.0.0/Harmonix-Standalone-Portable.exe) |
 
 ---
 
