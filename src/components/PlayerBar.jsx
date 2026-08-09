@@ -18,7 +18,6 @@ import {
   Activity,
   Quote,
   Heart,
-  Speaker,
   Gauge,
   Music,
   Maximize2,
@@ -51,9 +50,6 @@ export const PlayerBar = () => {
     setIsQueueOpen,
     activeTab,
     setActiveTab,
-    audioDevices,
-    selectedDevice,
-    changeAudioDevice,
   } = useAudio();
 
   const [showMoreMenu, setShowMoreMenu] = useState(false);
@@ -65,6 +61,15 @@ export const PlayerBar = () => {
   const albumGradient = getAlbumGradient(currentTrack ? currentTrack.album : 'Harmonix');
   const progressPercent = duration ? (currentTime / duration) * 100 : 0;
   const volumePercent = (isMuted ? 0 : volume) * 100;
+
+  const handleVolumeWheel = (e) => {
+    e.preventDefault();
+    if (e.deltaY < 0) {
+      changeVolume(volume + 0.05);
+    } else if (e.deltaY > 0) {
+      changeVolume(volume - 0.05);
+    }
+  };
 
   return (
     <>
@@ -146,7 +151,7 @@ export const PlayerBar = () => {
 
             <button
               onClick={handlePrevTrack}
-              title="Previous Track"
+              title="Previous Track (Shift + Left Arrow)"
               className="text-gray-300 hover:text-white transition-colors cursor-pointer"
             >
               <SkipBack className="w-5 h-5 fill-current" />
@@ -166,7 +171,7 @@ export const PlayerBar = () => {
 
             <button
               onClick={() => handleNextTrack(false)}
-              title="Next Track"
+              title="Next Track (Shift + Right Arrow)"
               className="text-gray-300 hover:text-white transition-colors cursor-pointer"
             >
               <SkipForward className="w-5 h-5 fill-current" />
@@ -250,28 +255,32 @@ export const PlayerBar = () => {
             <ListMusic className="w-4 h-4" />
           </button>
 
+          {/* Speed Options Menu */}
           <div className="relative">
             <button
               onClick={() => setShowMoreMenu(!showMoreMenu)}
-              title="Audio Output & Speed Options"
+              title="Playback Speed Options"
               className="p-2 text-gray-400 hover:text-white rounded-lg hover:bg-white/10 transition-colors cursor-pointer"
             >
               <MoreHorizontal className="w-4 h-4" />
             </button>
 
             {showMoreMenu && (
-              <div className="absolute right-0 bottom-12 bg-[#161622] border border-white/10 rounded-xl shadow-2xl p-3 w-56 z-50 text-xs space-y-3">
+              <div className="absolute right-0 bottom-12 bg-[#161622] border border-white/10 rounded-xl shadow-2xl p-3 w-48 z-50 text-xs space-y-2">
                 <div>
-                  <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-1 flex items-center gap-1">
-                    <Gauge className="w-3 h-3 text-indigo-400" />
-                    <span>Speed ({playbackRate}x)</span>
+                  <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-1.5 flex items-center gap-1">
+                    <Gauge className="w-3.5 h-3.5 text-indigo-400" />
+                    <span>Playback Speed ({playbackRate}x)</span>
                   </label>
                   <div className="grid grid-cols-3 gap-1">
                     {speedOptions.map((rate) => (
                       <button
                         key={rate}
-                        onClick={() => changePlaybackRate(rate)}
-                        className={`py-1 text-[11px] font-semibold rounded ${
+                        onClick={() => {
+                          changePlaybackRate(rate);
+                          setShowMoreMenu(false);
+                        }}
+                        className={`py-1 text-[11px] font-semibold rounded transition-colors cursor-pointer ${
                           playbackRate === rate
                             ? 'bg-indigo-600 text-white'
                             : 'bg-white/5 text-gray-300 hover:bg-white/10'
@@ -282,32 +291,16 @@ export const PlayerBar = () => {
                     ))}
                   </div>
                 </div>
-
-                {audioDevices.length > 0 && (
-                  <div>
-                    <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-1 flex items-center gap-1">
-                      <Speaker className="w-3 h-3 text-indigo-400" />
-                      <span>Audio Output</span>
-                    </label>
-                    <select
-                      value={selectedDevice}
-                      onChange={(e) => changeAudioDevice(e.target.value)}
-                      className="w-full bg-white/5 border border-white/10 rounded px-2 py-1 text-gray-200 text-[11px] focus:outline-none"
-                    >
-                      <option value="">Default Speaker</option>
-                      {audioDevices.map((d) => (
-                        <option key={d.deviceId} value={d.deviceId} className="bg-[#161622]">
-                          {d.label || `Device ${d.deviceId.slice(0, 5)}...`}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                )}
               </div>
             )}
           </div>
 
-          <div className="flex items-center gap-1.5 ml-1">
+          {/* Interactive Mouse Wheel Scrollable Volume Control Bar */}
+          <div
+            onWheel={handleVolumeWheel}
+            title="Scroll mouse wheel here to adjust volume"
+            className="flex items-center gap-1.5 ml-1 p-1 rounded-lg hover:bg-white/5 transition-colors"
+          >
             <button onClick={toggleMute} className="text-gray-400 hover:text-white cursor-pointer">
               {isMuted || volume === 0 ? (
                 <VolumeX className="w-4 h-4 text-red-400" />
@@ -324,7 +317,7 @@ export const PlayerBar = () => {
               step={0.01}
               value={isMuted ? 0 : volume}
               onChange={(e) => changeVolume(parseFloat(e.target.value))}
-              className="w-20"
+              className="w-20 cursor-pointer"
               style={{
                 background: `linear-gradient(to right, #6366f1 0%, #6366f1 ${volumePercent}%, rgba(255, 255, 255, 0.15) ${volumePercent}%, rgba(255, 255, 255, 0.15) 100%)`,
               }}

@@ -39,8 +39,8 @@
 
 | Executable Package | Description | Download |
 | :--- | :--- | :--- |
-| **Harmonix Standard Installer** | Standard Windows setup installer. Adds Harmonix to your **Windows Start Menu** and **Desktop**. | [Download `.exe`](https://github.com/zinkopiyush/harmonix/releases/download/v1.0.0/Harmonix-Standard-Installer.exe) |
-| **Harmonix Standalone Portable** | Portable single-file executable. Runs instantly anywhere **without installation**. | [Download `.exe`](https://github.com/zinkopiyush/harmonix/releases/download/v1.0.0/Harmonix-Standalone-Portable.exe) |
+| **Harmonix Standard Installer** | Standard Windows setup installer. Adds Harmonix to your **Windows Start Menu** and **Desktop**. | [Download `.exe`](https://github.com/zinkopiyush/harmonix/releases/download/v1.0.1/Harmonix-Standard-Installer.exe) |
+| **Harmonix Standalone Portable** | Portable single-file executable. Runs instantly anywhere **without installation**. | [Download `.exe`](https://github.com/zinkopiyush/harmonix/releases/download/v1.0.1/Harmonix-Standalone-Portable.exe) |
 
 ---
 
@@ -49,10 +49,13 @@
 | Shortcut | Action |
 | :--- | :--- |
 | `Space` | Toggle Play / Pause |
-| `Left Arrow` | Skip to Previous Track |
-| `Right Arrow` | Skip to Next Track |
+| `Left Arrow` | Skip 10 Seconds Backward |
+| `Right Arrow` | Skip 10 Seconds Forward |
+| `Shift + Left Arrow` | Play Previous Track |
+| `Shift + Right Arrow` | Skip to Next Track |
 | `Up Arrow` | Increase Volume (+5%) |
 | `Down Arrow` | Decrease Volume (-5%) |
+| `Mouse Wheel on Volume Bar` | Adjust Volume Level |
 | `M` | Toggle Mute |
 | `S` | Toggle Shuffle Mode |
 | `R` | Toggle Repeat Mode (Off → All → One) |

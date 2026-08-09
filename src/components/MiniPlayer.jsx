@@ -10,6 +10,8 @@ import {
   Maximize2,
   X,
   Music2,
+  Volume2,
+  VolumeX,
 } from 'lucide-react';
 
 export const MiniPlayer = () => {
@@ -18,10 +20,14 @@ export const MiniPlayer = () => {
     isPlaying,
     currentTime,
     duration,
+    volume,
+    isMuted,
     togglePlay,
     handleNextTrack,
     handlePrevTrack,
     seekTo,
+    changeVolume,
+    toggleMute,
     setIsMiniMode,
   } = useAudio();
 
@@ -37,6 +43,15 @@ export const MiniPlayer = () => {
   const handleCloseApp = () => {
     if (window.electronAPI && window.electronAPI.close) {
       window.electronAPI.close();
+    }
+  };
+
+  const handleVolumeWheel = (e) => {
+    e.preventDefault();
+    if (e.deltaY < 0) {
+      changeVolume(volume + 0.05);
+    } else if (e.deltaY > 0) {
+      changeVolume(volume - 0.05);
     }
   };
 
@@ -131,7 +146,7 @@ export const MiniPlayer = () => {
             max={duration || 100}
             value={currentTime}
             onChange={(e) => seekTo(parseFloat(e.target.value))}
-            className="flex-1"
+            className="flex-1 cursor-pointer"
             style={{
               background: `linear-gradient(to right, #6366f1 0%, #6366f1 ${progressPercent}%, rgba(255, 255, 255, 0.15) ${progressPercent}%, rgba(255, 255, 255, 0.15) 100%)`,
             }}
@@ -142,32 +157,52 @@ export const MiniPlayer = () => {
           </span>
         </div>
 
-        {/* Controls: Prev, Big Round Play/Pause, Next */}
-        <div className="flex items-center justify-center gap-6 pt-1">
-          <button
-            onClick={handlePrevTrack}
-            className="text-gray-300 hover:text-white transition-colors cursor-pointer"
+        {/* Controls: Prev, Big Round Play/Pause, Next & Wheel Volume */}
+        <div className="flex items-center justify-between pt-1">
+          <div
+            onWheel={handleVolumeWheel}
+            title="Scroll mouse wheel to adjust volume"
+            className="flex items-center gap-1 cursor-pointer hover:bg-white/5 p-1 rounded-lg"
           >
-            <SkipBack className="w-6 h-6 fill-current" />
-          </button>
+            <button onClick={toggleMute} className="text-gray-400 hover:text-white cursor-pointer">
+              {isMuted || volume === 0 ? (
+                <VolumeX className="w-4 h-4 text-red-400" />
+              ) : (
+                <Volume2 className="w-4 h-4" />
+              )}
+            </button>
+          </div>
 
-          <button
-            onClick={togglePlay}
-            className="w-12 h-12 rounded-full bg-indigo-600 hover:bg-indigo-500 text-white flex items-center justify-center shadow-lg shadow-indigo-600/50 hover:scale-105 transition-all cursor-pointer"
-          >
-            {isPlaying ? (
-              <Pause className="w-6 h-6 fill-current" />
-            ) : (
-              <Play className="w-6 h-6 fill-current translate-x-0.5" />
-            )}
-          </button>
+          <div className="flex items-center gap-6">
+            <button
+              onClick={handlePrevTrack}
+              title="Previous Track (Shift + Left Arrow)"
+              className="text-gray-300 hover:text-white transition-colors cursor-pointer"
+            >
+              <SkipBack className="w-6 h-6 fill-current" />
+            </button>
 
-          <button
-            onClick={() => handleNextTrack(false)}
-            className="text-gray-300 hover:text-white transition-colors cursor-pointer"
-          >
-            <SkipForward className="w-6 h-6 fill-current" />
-          </button>
+            <button
+              onClick={togglePlay}
+              className="w-12 h-12 rounded-full bg-indigo-600 hover:bg-indigo-500 text-white flex items-center justify-center shadow-lg shadow-indigo-600/50 hover:scale-105 transition-all cursor-pointer"
+            >
+              {isPlaying ? (
+                <Pause className="w-6 h-6 fill-current" />
+              ) : (
+                <Play className="w-6 h-6 fill-current translate-x-0.5" />
+              )}
+            </button>
+
+            <button
+              onClick={() => handleNextTrack(false)}
+              title="Next Track (Shift + Right Arrow)"
+              className="text-gray-300 hover:text-white transition-colors cursor-pointer"
+            >
+              <SkipForward className="w-6 h-6 fill-current" />
+            </button>
+          </div>
+
+          <div className="w-5"></div>
         </div>
       </div>
     </div>

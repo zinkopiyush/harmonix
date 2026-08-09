@@ -161,24 +161,17 @@ export const AudioProvider = ({ children }) => {
       if (EQ_PRESETS[savedEqPreset]) {
         setEqGains(EQ_PRESETS[savedEqPreset]);
       }
-
-      if (navigator.mediaDevices && navigator.mediaDevices.enumerateDevices) {
-        try {
-          const devices = await navigator.mediaDevices.enumerateDevices();
-          const audioOutputs = devices.filter((d) => d.kind === 'audiooutput');
-          setAudioDevices(audioOutputs);
-        } catch (err) {
-          console.warn('Could not enumerate audio devices:', err);
-        }
-      }
     }
 
     loadData();
   }, []);
 
-  // Optimized Throttled Time Update (250ms interval to prevent UI frame drops)
+  // Listen to native HTML5 Audio element play/pause events so Windows 11 4-finger touchpad gestures & media keys sync 100%
   useEffect(() => {
     const audio = audioRef.current;
+
+    const handlePlayEvent = () => setIsPlaying(true);
+    const handlePauseEvent = () => setIsPlaying(false);
 
     const handleTimeUpdate = () => {
       const now = Date.now();
@@ -191,12 +184,16 @@ export const AudioProvider = ({ children }) => {
     const handleEnded = () => handleNextTrack(true);
     const handleError = (e) => console.error('Audio playback error:', e);
 
+    audio.addEventListener('play', handlePlayEvent);
+    audio.addEventListener('pause', handlePauseEvent);
     audio.addEventListener('timeupdate', handleTimeUpdate);
     audio.addEventListener('loadedmetadata', handleLoadedMetadata);
     audio.addEventListener('ended', handleEnded);
     audio.addEventListener('error', handleError);
 
     return () => {
+      audio.removeEventListener('play', handlePlayEvent);
+      audio.removeEventListener('pause', handlePauseEvent);
       audio.removeEventListener('timeupdate', handleTimeUpdate);
       audio.removeEventListener('loadedmetadata', handleLoadedMetadata);
       audio.removeEventListener('ended', handleEnded);
@@ -204,7 +201,7 @@ export const AudioProvider = ({ children }) => {
     };
   }, [queue, queueIndex, repeatMode, isShuffle]);
 
-  // On-demand lazy calculations for Albums and Artists (computed only when activeTab requires them!)
+  // On-demand lazy calculations for Albums and Artists
   const albumsMap = useMemo(() => {
     if (activeTab !== 'albums') return [];
     const map = new Map();
@@ -296,7 +293,6 @@ export const AudioProvider = ({ children }) => {
 
     if (isPlaying) {
       audioRef.current.pause();
-      setIsPlaying(false);
     } else {
       audioRef.current
         .play()
@@ -374,7 +370,7 @@ export const AudioProvider = ({ children }) => {
     audioRef.current.playbackRate = rate;
   };
 
-  // Global Keyboard Shortcuts
+  // Updated Global Keyboard Shortcuts: Left/Right Arrow = +-10s, Shift+Left/Right Arrow = Prev/Next Track
   useEffect(() => {
     const handleKeyDown = (e) => {
       const activeTag = document.activeElement ? document.activeElement.tagName.toLowerCase() : '';
@@ -394,10 +390,18 @@ export const AudioProvider = ({ children }) => {
         togglePlay();
       } else if (e.code === 'ArrowLeft') {
         e.preventDefault();
-        handlePrevTrack();
+        if (e.shiftKey) {
+          handlePrevTrack();
+        } else {
+          seekTo(Math.max(0, audioRef.current.currentTime - 10));
+        }
       } else if (e.code === 'ArrowRight') {
         e.preventDefault();
-        handleNextTrack(false);
+        if (e.shiftKey) {
+          handleNextTrack(false);
+        } else {
+          seekTo(Math.min(audioRef.current.duration || 100, audioRef.current.currentTime + 10));
+        }
       } else if (e.code === 'ArrowUp') {
         e.preventDefault();
         changeVolume(volume + 0.05);
@@ -417,7 +421,7 @@ export const AudioProvider = ({ children }) => {
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [togglePlay, handlePrevTrack, handleNextTrack, volume, isMuted, isShuffle, repeatMode]);
+  }, [togglePlay, handlePrevTrack, handleNextTrack, volume, isMuted, isShuffle, repeatMode, seekTo, changeVolume]);
 
   const applyPreset = (presetName) => {
     setEqPreset(presetName);
@@ -457,17 +461,6 @@ export const AudioProvider = ({ children }) => {
       filtersRef.current.forEach((filter, index) => {
         filter.gain.value = nextEnabled ? eqGains[index] : 0;
       });
-    }
-  };
-
-  const changeAudioDevice = async (deviceId) => {
-    setSelectedDevice(deviceId);
-    if (audioRef.current.setSinkId) {
-      try {
-        await audioRef.current.setSinkId(deviceId);
-      } catch (err) {
-        console.error('Failed to set audio output device sinkId:', err);
-      }
     }
   };
 
@@ -856,7 +849,6 @@ export const AudioProvider = ({ children }) => {
         // Audio Output Device
         audioDevices,
         selectedDevice,
-        changeAudioDevice,
         // UI Navigation & Modals
         activeTab,
         setActiveTab,
