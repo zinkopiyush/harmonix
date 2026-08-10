@@ -31,6 +31,9 @@
 - 📱 **Floating Small Cover Mini Player**: Toggleable 360x450 compact desktop mini player window.
 - 🖱️ **Double-Click Play & Right-Click Context Menu**: Spotify-style double click to play with rich right-click context menus.
 - 📂 **Folder Browser & Custom Playlists**: Scan local directories, set 1:1 cropped playlist artwork, and manage custom playlists.
+- ✋ **Native Windows Media Integration**: Hooked into Windows 11 System Media Transport Controls for hardware media keys, Bluetooth buttons, and 4-finger sliding touchpad gestures.
+- 🔄 **Drag-and-Drop Play Queue**: Smoothly reorder your "Up Next" songs with intelligent auto-scrolling.
+- ♾️ **Robust Infinite Scroll**: Navigate massive library collections flawlessly without DOM bloating.
 - 🎹 **Global Keyboard Shortcuts**: Instant hotkeys for playback, volume, shuffle, mute, and search.
 
 ---
@@ -39,8 +42,8 @@
 
 | Executable Package | Description | Download |
 | :--- | :--- | :--- |
-| **Harmonix Standard Installer** | Standard Windows setup installer. Adds Harmonix to your **Windows Start Menu** and **Desktop**. | [Download `.exe`](https://github.com/zinkopiyush/harmonix/releases/download/v1.0.1/Harmonix-Standard-Installer.exe) |
-| **Harmonix Standalone Portable** | Portable single-file executable. Runs instantly anywhere **without installation**. | [Download `.exe`](https://github.com/zinkopiyush/harmonix/releases/download/v1.0.1/Harmonix-Standalone-Portable.exe) |
+| **Harmonix Standard Installer** | Standard Windows setup installer. Adds Harmonix to your **Windows Start Menu** and **Desktop**. | [Download `.exe`](https://github.com/zinkopiyush/harmonix/releases/download/v1.0.1/Harmonix%20Setup%201.0.1.exe) |
+| **Harmonix Standalone Portable** | Portable single-file executable. Runs instantly anywhere **without installation**. | [Download `.exe`](https://github.com/zinkopiyush/harmonix/releases/download/v1.0.1/Harmonix-Standalone.exe) |
 
 ---
 
@@ -51,8 +54,8 @@
 | `Space` | Toggle Play / Pause |
 | `Left Arrow` | Skip 10 Seconds Backward |
 | `Right Arrow` | Skip 10 Seconds Forward |
-| `Shift + Left Arrow` | Play Previous Track |
-| `Shift + Right Arrow` | Skip to Next Track |
+| `Ctrl + Left Arrow` | Play Previous Track |
+| `Ctrl + Right Arrow` | Skip to Next Track |
 | `Up Arrow` | Increase Volume (+5%) |
 | `Down Arrow` | Decrease Volume (-5%) |
 | `Mouse Wheel on Volume Bar` | Adjust Volume Level |
