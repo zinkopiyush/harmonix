@@ -9,7 +9,7 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "electron:dev": "concurrently -k \"vite\" \"wait-on tcp:5173 && electron .\"",
+    "electron:dev": "concurrently -k \"vite\" \"wait-on tcp:5173 && cross-env NODE_ENV=development electron .\"",
     "electron:build": "vite build && electron-builder --win"
   },
   "build": {
@@ -50,11 +50,16 @@
     "react-dom": "^18.3.1"
   },
   "devDependencies": {
+    "@reticlehq/browser": "^2.5.0",
+    "@reticlehq/electron": "^2.5.0",
+    "@reticlehq/react": "^2.5.0",
+    "@reticlehq/vite-plugin": "^2.5.0",
     "@tailwindcss/vite": "^4.3.3",
     "@types/react": "^18.3.18",
     "@types/react-dom": "^18.3.5",
     "@vitejs/plugin-react": "^4.3.4",
     "concurrently": "^9.1.2",
+    "cross-env": "^10.1.0",
     "electron": "^34.2.0",
     "electron-builder": "^25.1.8",
     "tailwindcss": "^4.3.3",

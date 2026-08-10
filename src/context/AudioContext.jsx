@@ -11,6 +11,7 @@ import {
   setSettingDB,
 } from '../utils/storage';
 import { parseTrackMetadata } from '../utils/audioMetadata';
+import { AlertModal } from '../components/AlertModal';
 
 const AudioContext = createContext(null);
 
@@ -57,6 +58,7 @@ export const AudioProvider = ({ children }) => {
 
   const [queue, setQueue] = useState([]);
   const [queueIndex, setQueueIndex] = useState(-1);
+  const [playHistory, setPlayHistory] = useState([]); // True history stack for previous track playback in shuffle
 
   const [isEqEnabled, setIsEqEnabled] = useState(true);
   const [eqPreset, setEqPreset] = useState('Flat');
@@ -81,6 +83,11 @@ export const AudioProvider = ({ children }) => {
   const filtersRef = useRef([]);
   const preampNodeRef = useRef(null);
   const lastTimeUpdateRef = useRef(0);
+  const [alertModal, setAlertModal] = useState({ isOpen: false, title: '', message: '', type: 'info' });
+
+  const showAlert = (title, message, type = 'info') => {
+    setAlertModal({ isOpen: true, title, message, type });
+  };
 
   const initWebAudio = useCallback(() => {
     if (audioCtxRef.current) return;
@@ -166,7 +173,7 @@ export const AudioProvider = ({ children }) => {
     loadData();
   }, []);
 
-  // Listen to native HTML5 Audio element play/pause events so Windows 11 4-finger touchpad gestures & media keys sync 100%
+  // Listen to native play/pause for Windows 11 touchpad gesture & media keys
   useEffect(() => {
     const audio = audioRef.current;
 
@@ -199,11 +206,11 @@ export const AudioProvider = ({ children }) => {
       audio.removeEventListener('ended', handleEnded);
       audio.removeEventListener('error', handleError);
     };
-  }, [queue, queueIndex, repeatMode, isShuffle]);
+  }, [queue, queueIndex, repeatMode, isShuffle, playHistory]);
 
-  // On-demand lazy calculations for Albums and Artists
+  // Fast Memoized maps for Albums and Artists
   const albumsMap = useMemo(() => {
-    if (activeTab !== 'albums') return [];
+    if (tracks.length === 0) return [];
     const map = new Map();
     tracks.forEach((track) => {
       const albumName = track.album || 'Unknown Album';
@@ -218,10 +225,10 @@ export const AudioProvider = ({ children }) => {
       map.get(albumName).tracks.push(track);
     });
     return Array.from(map.values());
-  }, [tracks, activeTab]);
+  }, [tracks]);
 
   const artistsMap = useMemo(() => {
-    if (activeTab !== 'artists') return [];
+    if (tracks.length === 0) return [];
     const map = new Map();
     tracks.forEach((track) => {
       const artistName = track.artist || 'Unknown Artist';
@@ -238,12 +245,16 @@ export const AudioProvider = ({ children }) => {
       if (track.album) entry.albums.add(track.album);
     });
     return Array.from(map.values());
-  }, [tracks, activeTab]);
+  }, [tracks]);
 
-  const playTrack = (track, newQueue = null, indexInQueue = 0) => {
+  const playTrack = (track, newQueue = null, indexInQueue = 0, addToHistory = true) => {
     initWebAudio();
     if (audioCtxRef.current && audioCtxRef.current.state === 'suspended') {
       audioCtxRef.current.resume();
+    }
+
+    if (currentTrack && addToHistory) {
+      setPlayHistory((prev) => [...prev, currentTrack]);
     }
 
     if (newQueue) {
@@ -311,7 +322,15 @@ export const AudioProvider = ({ children }) => {
     if (queue.length === 0) return;
 
     let nextIndex = queueIndex + 1;
-    if (isShuffle) {
+
+    if (queue[nextIndex]?._isManualNext) {
+      setQueue((prev) => {
+        const copy = [...prev];
+        copy[nextIndex] = { ...copy[nextIndex] };
+        delete copy[nextIndex]._isManualNext;
+        return copy;
+      });
+    } else if (isShuffle) {
       nextIndex = Math.floor(Math.random() * queue.length);
     } else if (nextIndex >= queue.length) {
       if (repeatMode === 'all') {
@@ -324,13 +343,23 @@ export const AudioProvider = ({ children }) => {
 
     const nextTrack = queue[nextIndex];
     if (nextTrack) {
-      playTrack(nextTrack, queue, nextIndex);
+      playTrack(nextTrack, queue, nextIndex, true);
     }
   };
 
+  // Fixed Previous Track: On Shuffle mode, pop from playHistory so it ALWAYS plays the true previous song
   const handlePrevTrack = () => {
     if (currentTime > 3) {
       seekTo(0);
+      return;
+    }
+
+    if (playHistory.length > 0) {
+      const prevTrack = playHistory[playHistory.length - 1];
+      setPlayHistory((prev) => prev.slice(0, -1));
+
+      const newIndex = queue.findIndex((t) => t.id === prevTrack.id);
+      playTrack(prevTrack, null, newIndex >= 0 ? newIndex : 0, false);
       return;
     }
 
@@ -343,7 +372,7 @@ export const AudioProvider = ({ children }) => {
 
     const prevTrack = queue[prevIndex];
     if (prevTrack) {
-      playTrack(prevTrack, queue, prevIndex);
+      playTrack(prevTrack, queue, prevIndex, false);
     }
   };
 
@@ -370,7 +399,7 @@ export const AudioProvider = ({ children }) => {
     audioRef.current.playbackRate = rate;
   };
 
-  // Updated Global Keyboard Shortcuts: Left/Right Arrow = +-10s, Shift+Left/Right Arrow = Prev/Next Track
+  // Updated Keyboard Shortcuts: Ctrl + Left Arrow / Ctrl + Right Arrow = Prev / Next Track
   useEffect(() => {
     const handleKeyDown = (e) => {
       const activeTag = document.activeElement ? document.activeElement.tagName.toLowerCase() : '';
@@ -390,14 +419,14 @@ export const AudioProvider = ({ children }) => {
         togglePlay();
       } else if (e.code === 'ArrowLeft') {
         e.preventDefault();
-        if (e.shiftKey) {
+        if (e.ctrlKey || e.metaKey) {
           handlePrevTrack();
         } else {
           seekTo(Math.max(0, audioRef.current.currentTime - 10));
         }
       } else if (e.code === 'ArrowRight') {
         e.preventDefault();
-        if (e.shiftKey) {
+        if (e.ctrlKey || e.metaKey) {
           handleNextTrack(false);
         } else {
           seekTo(Math.min(audioRef.current.duration || 100, audioRef.current.currentTime + 10));
@@ -539,6 +568,14 @@ export const AudioProvider = ({ children }) => {
     if (!folderPath) return;
 
     const folderName = folderPath.split('\\').pop().split('/').pop() || 'New Folder Playlist';
+    
+    // Check for duplicate playlist
+    const exists = playlists.some((p) => p.name.toLowerCase() === folderName.toLowerCase());
+    if (exists) {
+      showAlert('Playlist Exists', `A playlist named "${folderName}" already exists.`, 'error');
+      return;
+    }
+
     setIsScanning(true);
 
     try {
@@ -574,6 +611,7 @@ export const AudioProvider = ({ children }) => {
       const updatedPlaylists = [...playlists, newPlaylist];
       setPlaylists(updatedPlaylists);
       await savePlaylistToDB(newPlaylist);
+      showAlert('Playlist Created', `Playlist "${folderName}" was successfully created with ${newTrackIds.length} tracks.`, 'success');
     } catch (err) {
       console.error('Error importing folder as playlist:', err);
     } finally {
@@ -627,6 +665,20 @@ export const AudioProvider = ({ children }) => {
     const updatedPlaylists = playlists.map((p) => {
       if (p.id === playlistId) {
         return { ...p, picture: pictureDataUrl };
+      }
+      return p;
+    });
+
+    setPlaylists(updatedPlaylists);
+    const target = updatedPlaylists.find((p) => p.id === playlistId);
+    if (target) await savePlaylistToDB(target);
+  };
+
+  const renamePlaylist = async (playlistId, newName) => {
+    if (!newName.trim()) return;
+    const updatedPlaylists = playlists.map((p) => {
+      if (p.id === playlistId) {
+        return { ...p, name: newName.trim() };
       }
       return p;
     });
@@ -703,6 +755,11 @@ export const AudioProvider = ({ children }) => {
 
   const createPlaylist = async (name) => {
     if (!name.trim()) return;
+    const exists = playlists.some((p) => p.name.toLowerCase() === name.trim().toLowerCase());
+    if (exists) {
+      showAlert('Playlist Exists', `A playlist named "${name.trim()}" already exists.`, 'error');
+      return null;
+    }
     const newPlaylist = {
       id: Date.now().toString(),
       name: name.trim(),
@@ -713,6 +770,28 @@ export const AudioProvider = ({ children }) => {
     const updated = [...playlists, newPlaylist];
     setPlaylists(updated);
     await savePlaylistToDB(newPlaylist);
+    return newPlaylist;
+  };
+
+  const createPlaylistWithTracks = async (name, trackIds) => {
+    if (!name.trim()) return;
+    const exists = playlists.some((p) => p.name.toLowerCase() === name.trim().toLowerCase());
+    if (exists) {
+      showAlert('Playlist Exists', `A playlist named "${name.trim()}" already exists.`, 'error');
+      return null;
+    }
+    const newPlaylist = {
+      id: Date.now().toString(),
+      name: name.trim(),
+      trackIds: trackIds,
+      picture: null,
+      createdAt: Date.now(),
+    };
+    const updated = [...playlists, newPlaylist];
+    setPlaylists(updated);
+    await savePlaylistToDB(newPlaylist);
+    showAlert('Playlist Created', `Playlist "${name.trim()}" was successfully created with ${trackIds.length} tracks.`, 'success');
+    return newPlaylist;
   };
 
   const deletePlaylist = async (id) => {
@@ -752,7 +831,7 @@ export const AudioProvider = ({ children }) => {
   const playNext = (track) => {
     setQueue((prev) => {
       const copy = [...prev];
-      copy.splice(queueIndex + 1, 0, track);
+      copy.splice(queueIndex + 1, 0, { ...track, _isManualNext: true });
       return copy;
     });
   };
@@ -769,6 +848,25 @@ export const AudioProvider = ({ children }) => {
   const clearQueue = () => {
     setQueue([]);
     setQueueIndex(-1);
+    setCurrentTrack(null);
+  };
+
+  const moveInQueue = (fromIndex, toIndex) => {
+    if (fromIndex === toIndex || fromIndex < 0 || toIndex < 0 || fromIndex >= queue.length || toIndex >= queue.length) return;
+    
+    setQueue((prev) => {
+      const copy = [...prev];
+      const [item] = copy.splice(fromIndex, 1);
+      copy.splice(toIndex, 0, item);
+      return copy;
+    });
+    
+    setQueueIndex((prev) => {
+      if (prev === fromIndex) return toIndex;
+      if (prev > fromIndex && prev <= toIndex) return prev - 1;
+      if (prev < fromIndex && prev >= toIndex) return prev + 1;
+      return prev;
+    });
   };
 
   const filteredTracks = useMemo(() => {
@@ -786,7 +884,6 @@ export const AudioProvider = ({ children }) => {
   return (
     <AudioContext.Provider
       value={{
-        // Library
         tracks,
         filteredTracks,
         playlists,
@@ -802,15 +899,15 @@ export const AudioProvider = ({ children }) => {
         updateTrackTags,
         removeTrack,
         clearLibrary,
-        // Playlists
         createPlaylist,
+        createPlaylistWithTracks,
         deletePlaylist,
+        renamePlaylist,
         addTrackToPlaylist,
         removeTrackFromPlaylist,
         importFolderAsPlaylist,
         addFilesToPlaylist,
         updatePlaylistCover,
-        // Playback
         currentTrack,
         isPlaying,
         currentTime,
@@ -824,20 +921,20 @@ export const AudioProvider = ({ children }) => {
         togglePlay,
         handleNextTrack,
         handlePrevTrack,
+        playHistory,
         seekTo,
         changeVolume,
         toggleMute,
         changePlaybackRate,
         setIsShuffle,
         setRepeatMode,
-        // Queue
         queue,
         queueIndex,
         addToQueue,
         playNext,
         removeFromQueue,
         clearQueue,
-        // Equalizer
+        moveInQueue,
         isEqEnabled,
         eqPreset,
         eqGains,
@@ -846,10 +943,8 @@ export const AudioProvider = ({ children }) => {
         changeEqGain,
         changePreamp,
         toggleEqEnabled,
-        // Audio Output Device
         audioDevices,
         selectedDevice,
-        // UI Navigation & Modals
         activeTab,
         setActiveTab,
         searchQuery,
@@ -864,11 +959,17 @@ export const AudioProvider = ({ children }) => {
         setEditingTrack,
         isMiniMode,
         setIsMiniMode,
-        // Audio Node Reference for Visualizer
         analyserNodeRef,
       }}
     >
       {children}
+      <AlertModal 
+        isOpen={alertModal.isOpen} 
+        title={alertModal.title} 
+        message={alertModal.message} 
+        type={alertModal.type}
+        onClose={() => setAlertModal({ ...alertModal, isOpen: false })} 
+      />
     </AudioContext.Provider>
   );
 };

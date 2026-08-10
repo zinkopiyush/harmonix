@@ -36,8 +36,14 @@ export const TagEditorModal = () => {
   };
 
   return (
-    <div className="fixed inset-0 bg-black/60 backdrop-blur-md z-50 flex items-center justify-center p-4">
-      <div className="bg-[#14141f] border border-white/10 rounded-2xl shadow-2xl w-full max-w-md overflow-hidden flex flex-col animate-in fade-in zoom-in-95 duration-200">
+    <div
+      onClick={() => setIsTagEditorOpen(false)}
+      className="fixed inset-0 bg-black/60 backdrop-blur-md z-50 flex items-center justify-center p-4 animate-in fade-in duration-200"
+    >
+      <div
+        onClick={(e) => e.stopPropagation()}
+        className="bg-[#14141f] border border-white/10 rounded-2xl shadow-2xl w-full max-w-md overflow-hidden flex flex-col animate-in fade-in zoom-in-95 duration-200"
+      >
         {/* Header */}
         <div className="px-6 py-4 bg-[#1a1a29] border-b border-white/10 flex items-center justify-between">
           <div className="flex items-center gap-3">

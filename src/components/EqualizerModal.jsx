@@ -1,11 +1,9 @@
 import React from 'react';
 import { useAudio, EQ_FREQUENCIES, EQ_PRESETS } from '../context/AudioContext';
-import { Sliders, X, RotateCcw, Power } from 'lucide-react';
+import { Sliders, Power, RotateCcw, X, Check } from 'lucide-react';
 
 export const EqualizerModal = () => {
   const {
-    isEqModalOpen,
-    setIsEqModalOpen,
     isEqEnabled,
     eqPreset,
     eqGains,
@@ -14,33 +12,47 @@ export const EqualizerModal = () => {
     changeEqGain,
     changePreamp,
     toggleEqEnabled,
+    isEqModalOpen,
+    setIsEqModalOpen,
   } = useAudio();
 
   if (!isEqModalOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/60 backdrop-blur-md z-50 flex items-center justify-center p-4">
-      <div className="bg-[#14141f] border border-white/10 rounded-2xl shadow-2xl w-full max-w-2xl overflow-hidden flex flex-col animate-in fade-in zoom-in-95 duration-200">
+    <div
+      onClick={() => setIsEqModalOpen(false)}
+      className="fixed inset-0 z-50 bg-black/70 backdrop-blur-md flex items-center justify-center p-4 animate-in fade-in zoom-in-95 duration-200 select-none"
+    >
+      <div
+        onClick={(e) => e.stopPropagation()}
+        className="bg-[#12121e] border border-white/15 rounded-3xl w-full max-w-2xl shadow-2xl p-6 sm:p-8 space-y-6 relative overflow-hidden"
+      >
+        {/* Ambient Glow */}
+        <div className="absolute -top-20 -left-20 w-60 h-60 bg-indigo-600/20 rounded-full blur-3xl pointer-events-none"></div>
+
         {/* Header */}
-        <div className="px-6 py-4 bg-[#1a1a29] border-b border-white/10 flex items-center justify-between">
+        <div className="flex items-center justify-between border-b border-white/10 pb-4 relative z-10">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg bg-indigo-500/20 text-indigo-400 border border-indigo-500/30 flex items-center justify-center">
-              <Sliders className="w-4 h-4" />
+            <div className="w-10 h-10 rounded-2xl bg-indigo-600/20 border border-indigo-500/30 flex items-center justify-center text-indigo-400">
+              <Sliders className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="font-bold text-sm text-gray-100">10-Band Graphic Equalizer</h3>
-              <p className="text-[10px] text-gray-400">High-fidelity Web Audio API Processing</p>
+              <h3 className="text-lg font-extrabold text-white tracking-tight">
+                10-Band Graphic Equalizer
+              </h3>
+              <p className="text-xs text-gray-400">
+                High-fidelity Web Audio API Processing
+              </p>
             </div>
           </div>
 
           <div className="flex items-center gap-3">
-            {/* Enable/Disable Toggle */}
             <button
               onClick={toggleEqEnabled}
-              className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold transition-all ${
+              className={`flex items-center gap-2 px-3.5 py-1.5 rounded-xl font-bold text-xs transition-all shadow-md cursor-pointer ${
                 isEqEnabled
-                  ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/30'
-                  : 'bg-white/10 text-gray-400'
+                  ? 'bg-indigo-600 text-white shadow-indigo-600/30'
+                  : 'bg-white/10 text-gray-400 hover:text-white'
               }`}
             >
               <Power className="w-3.5 h-3.5" />
@@ -49,90 +61,90 @@ export const EqualizerModal = () => {
 
             <button
               onClick={() => setIsEqModalOpen(false)}
-              className="p-1 text-gray-400 hover:text-white rounded-lg hover:bg-white/10 transition-colors"
+              className="p-2 text-gray-400 hover:text-white rounded-xl hover:bg-white/10 transition-colors cursor-pointer"
             >
               <X className="w-5 h-5" />
             </button>
           </div>
         </div>
 
-        {/* Body Content */}
-        <div className="p-6 space-y-6">
-          {/* Preset Selector & Preamp Slider */}
-          <div className="flex items-center justify-between gap-6 pb-4 border-b border-white/10">
-            <div className="flex items-center gap-3">
-              <span className="text-xs font-semibold text-gray-300">Preset:</span>
-              <select
-                value={eqPreset}
-                onChange={(e) => applyPreset(e.target.value)}
-                className="bg-white/5 border border-white/10 rounded-lg px-3 py-1.5 text-xs text-gray-200 focus:outline-none focus:border-indigo-500"
-              >
-                {Object.keys(EQ_PRESETS).map((preset) => (
-                  <option key={preset} value={preset} className="bg-[#161622] text-gray-200">
-                    {preset}
-                  </option>
-                ))}
-                <option value="Custom" disabled className="bg-[#161622] text-gray-400">
-                  Custom
-                </option>
-              </select>
-
-              <button
-                onClick={() => applyPreset('Flat')}
-                title="Reset Equalizer"
-                className="p-1.5 text-gray-400 hover:text-white hover:bg-white/5 rounded-md"
-              >
-                <RotateCcw className="w-3.5 h-3.5" />
-              </button>
-            </div>
-
-            {/* Preamp Gain */}
-            <div className="flex items-center gap-3">
-              <span className="text-xs font-semibold text-gray-300">Preamp:</span>
-              <input
-                type="range"
-                min={-12}
-                max={12}
-                step={0.5}
-                value={preampGain}
-                onChange={(e) => changePreamp(parseFloat(e.target.value))}
-                className="w-28"
-              />
-              <span className="text-xs font-mono text-indigo-400 w-10 text-right">
-                {preampGain > 0 ? `+${preampGain}` : preampGain} dB
-              </span>
-            </div>
+        {/* Presets Grid */}
+        <div className="space-y-2 relative z-10">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-bold text-gray-300 uppercase tracking-wider">
+              Genre Presets
+            </span>
+            <button
+              onClick={() => applyPreset('Flat')}
+              className="text-[11px] text-gray-400 hover:text-indigo-400 flex items-center gap-1 cursor-pointer transition-colors"
+            >
+              <RotateCcw className="w-3 h-3" />
+              <span>Reset Flat</span>
+            </button>
           </div>
 
-          {/* 10 Vertical Band Sliders */}
-          <div className="grid grid-cols-10 gap-2 items-center text-center pt-2">
-            {EQ_FREQUENCIES.map((freq, index) => {
-              const gainVal = eqGains[index] || 0;
-              const formattedFreq = freq >= 1000 ? `${freq / 1000}k` : `${freq}`;
+          <div className="flex flex-wrap gap-1.5">
+            {Object.keys(EQ_PRESETS).map((name) => (
+              <button
+                key={name}
+                onClick={() => applyPreset(name)}
+                className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all cursor-pointer flex items-center gap-1.5 ${
+                  eqPreset === name
+                    ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/30 scale-105'
+                    : 'bg-white/5 text-gray-300 hover:bg-white/10 hover:text-white border border-white/5'
+                }`}
+              >
+                {eqPreset === name && <Check className="w-3.5 h-3.5" />}
+                <span>{name}</span>
+              </button>
+            ))}
+          </div>
+        </div>
 
+        {/* Preamp Control */}
+        <div className="bg-white/5 border border-white/5 rounded-2xl p-4 flex items-center justify-between gap-4 relative z-10">
+          <span className="text-xs font-bold text-gray-300">Preamp Gain</span>
+          <div className="flex-1 flex items-center gap-3">
+            <input
+              type="range"
+              min={-12}
+              max={12}
+              step={0.5}
+              value={preampGain}
+              onChange={(e) => changePreamp(parseFloat(e.target.value))}
+              className="flex-1 cursor-pointer"
+            />
+            <span className="text-xs font-mono text-indigo-300 w-12 text-right">
+              {preampGain > 0 ? `+${preampGain}` : preampGain} dB
+            </span>
+          </div>
+        </div>
+
+        {/* 10-Band Faders */}
+        <div className="bg-white/5 border border-white/5 rounded-2xl p-5 relative z-10">
+          <div className="grid grid-cols-10 gap-2 items-center text-center">
+            {EQ_FREQUENCIES.map((freq, index) => {
+              const gain = eqGains[index] || 0;
+              const formattedFreq = freq >= 1000 ? `${freq / 1000}K` : freq;
               return (
                 <div key={freq} className="flex flex-col items-center gap-2">
-                  <span className="text-[10px] font-mono text-indigo-300 h-4">
-                    {gainVal > 0 ? `+${gainVal}` : gainVal}
+                  <span className="text-[10px] font-mono text-indigo-300 font-bold">
+                    {gain > 0 ? `+${gain}` : gain}
                   </span>
 
-                  <div className="h-44 flex items-center justify-center py-2 relative">
-                    {/* Background line */}
-                    <div className="absolute inset-y-0 w-1 bg-white/10 rounded-full pointer-events-none"></div>
-
+                  <div className="h-44 flex items-center justify-center py-2">
                     <input
                       type="range"
                       min={-12}
                       max={12}
                       step={0.5}
-                      value={gainVal}
-                      disabled={!isEqEnabled}
+                      value={gain}
                       onChange={(e) => changeEqGain(index, parseFloat(e.target.value))}
-                      className="vertical-slider relative z-10"
+                      className="accent-indigo-500 cursor-pointer w-[140px] -rotate-90"
                     />
                   </div>
 
-                  <span className="text-[11px] font-bold text-gray-400 uppercase font-mono">
+                  <span className="text-[10px] font-mono text-gray-400 font-medium">
                     {formattedFreq}
                   </span>
                 </div>
@@ -142,11 +154,11 @@ export const EqualizerModal = () => {
         </div>
 
         {/* Footer */}
-        <div className="px-6 py-3 bg-[#11111a] border-t border-white/10 flex justify-between items-center text-[11px] text-gray-500">
+        <div className="flex items-center justify-between pt-2 border-t border-white/10 text-xs text-gray-400 relative z-10">
           <span>Range: -12 dB to +12 dB</span>
           <button
             onClick={() => setIsEqModalOpen(false)}
-            className="px-4 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold rounded-lg shadow transition-colors"
+            className="px-5 py-2 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-xl shadow-lg shadow-indigo-600/30 transition-all cursor-pointer"
           >
             Done
           </button>

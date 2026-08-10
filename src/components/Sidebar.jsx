@@ -112,7 +112,12 @@ export const Sidebar = memo(({ sidebarWidth, setSidebarWidth, isCollapsed, setIs
               </span>
             )}
             <button
-              onClick={() => setIsCollapsed(!isCollapsed)}
+              onClick={() => {
+                setIsCollapsed(!isCollapsed);
+                if (isCollapsed && sidebarWidth < 140) {
+                  setSidebarWidth(240);
+                }
+              }}
               title={isCollapsed ? 'Expand Sidebar' : 'Collapse Sidebar'}
               className={`p-1.5 text-gray-400 hover:text-white rounded-lg hover:bg-white/10 transition-colors cursor-pointer ${
                 isCollapsed ? 'mx-auto' : 'ml-auto'
@@ -245,9 +250,12 @@ export const Sidebar = memo(({ sidebarWidth, setSidebarWidth, isCollapsed, setIs
         isOpen={isClearModalOpen}
         title="Clear Library Index?"
         message="Are you sure you want to clear your local music library index? Your audio files on disk will NOT be deleted."
-        confirmText="Clear Library"
-        onConfirm={clearLibrary}
-        onClose={() => setIsClearModalOpen(false)}
+        confirmLabel="Clear Library"
+        onConfirm={() => {
+          clearLibrary();
+          setIsClearModalOpen(false);
+        }}
+        onCancel={() => setIsClearModalOpen(false)}
       />
     </>
   );

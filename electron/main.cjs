@@ -32,6 +32,11 @@ function createWindow() {
     },
   });
 
+  if (process.env.NODE_ENV === 'development') {
+    const { installReticleCapture } = require('@reticlehq/electron/main');
+    installReticleCapture(mainWindow);
+  }
+
   const isDev = process.env.NODE_ENV === 'development';
   if (isDev) {
     mainWindow.loadURL('http://localhost:5173').catch(() => {

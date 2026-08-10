@@ -1,10 +1,10 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useAudio } from '../context/AudioContext';
 import { TrackList } from './TrackList';
-import { FolderTree, Folder, HardDrive } from 'lucide-react';
+import { FolderTree, Folder, HardDrive, Play, ListMusic } from 'lucide-react';
 
 export const FolderBrowser = () => {
-  const { tracks, currentFolder, scanFolder } = useAudio();
+  const { tracks, currentFolder, scanFolder, playTrack, createPlaylistWithTracks } = useAudio();
 
   const foldersMap = useMemo(() => {
     const map = new Map();
@@ -18,7 +18,8 @@ export const FolderBrowser = () => {
     return map;
   }, [tracks]);
 
-  const [selectedFolderPath, setSelectedFolderPath] = React.useState(null);
+  const [selectedFolderPath, setSelectedFolderPath] = useState(null);
+  const [contextMenu, setContextMenu] = useState(null);
 
   if (selectedFolderPath && foldersMap.has(selectedFolderPath)) {
     const folderTracks = foldersMap.get(selectedFolderPath);
@@ -43,7 +44,7 @@ export const FolderBrowser = () => {
   }
 
   return (
-    <div className="flex-1 flex flex-col overflow-hidden">
+    <div className="flex-1 flex flex-col overflow-hidden relative" onClick={() => setContextMenu(null)}>
       <div className="px-6 py-4 border-b border-white/5 flex items-center justify-between">
         <div>
           <h2 className="text-xl font-bold text-gray-100">Folder Browser</h2>
@@ -70,6 +71,16 @@ export const FolderBrowser = () => {
                 <div
                   key={path}
                   onClick={() => setSelectedFolderPath(path)}
+                  onContextMenu={(e) => {
+                    e.preventDefault();
+                    setContextMenu({
+                      x: e.clientX,
+                      y: e.clientY,
+                      path: path,
+                      files: files,
+                      folderName: folderName,
+                    });
+                  }}
                   className="glass-card p-4 rounded-xl cursor-pointer flex items-center gap-4 group hover:border-indigo-500/40"
                 >
                   <div className="w-12 h-12 rounded-lg bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 flex items-center justify-center flex-shrink-0">
@@ -100,6 +111,39 @@ export const FolderBrowser = () => {
           </div>
         )}
       </div>
+
+      {contextMenu && (
+        <div
+          className="fixed z-50 bg-[#1e1e2d] border border-white/10 rounded-xl shadow-2xl py-2 min-w-[200px]"
+          style={{ top: Math.min(contextMenu.y, window.innerHeight - 100), left: Math.min(contextMenu.x, window.innerWidth - 200) }}
+          onClick={(e) => e.stopPropagation()}
+        >
+          <button
+            className="w-full text-left px-4 py-2 text-sm text-gray-200 hover:bg-white/10 hover:text-white flex items-center gap-3 transition-colors cursor-pointer"
+            onClick={() => {
+              if (contextMenu.files.length > 0) {
+                playTrack(contextMenu.files[0], contextMenu.files, 0);
+              }
+              setContextMenu(null);
+            }}
+          >
+            <Play className="w-4 h-4 text-indigo-400" />
+            Play Folder
+          </button>
+          
+          <button
+            className="w-full text-left px-4 py-2 text-sm text-gray-200 hover:bg-white/10 hover:text-white flex items-center gap-3 transition-colors cursor-pointer"
+            onClick={() => {
+              const trackIds = contextMenu.files.map(f => f.id);
+              createPlaylistWithTracks(contextMenu.folderName, trackIds);
+              setContextMenu(null);
+            }}
+          >
+            <ListMusic className="w-4 h-4 text-indigo-400" />
+            Make a Playlist
+          </button>
+        </div>
+      )}
     </div>
   );
 };

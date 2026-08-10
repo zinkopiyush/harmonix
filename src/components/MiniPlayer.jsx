@@ -59,7 +59,7 @@ export const MiniPlayer = () => {
   const progressPercent = duration ? (currentTime / duration) * 100 : 0;
 
   return (
-    <div className="w-full h-full bg-[#0d0d14] text-white flex flex-col justify-between p-5 select-none relative overflow-hidden drag-header border border-white/10 rounded-2xl shadow-2xl">
+    <div className="w-screen h-screen bg-[#0d0d14] text-white flex flex-col justify-between p-5 select-none relative overflow-hidden titlebar-drag">
       {/* Dynamic Background Glow */}
       <div
         className="absolute inset-0 opacity-20 blur-3xl pointer-events-none"
@@ -67,7 +67,7 @@ export const MiniPlayer = () => {
       ></div>
 
       {/* Top Header Bar */}
-      <div className="relative z-10 flex items-center justify-between no-drag" style={{ WebkitAppRegion: 'no-drag' }}>
+      <div className="relative z-10 flex items-center justify-between titlebar-no-drag" style={{ WebkitAppRegion: 'no-drag' }}>
         <div className="flex items-center gap-2">
           <div className="w-6 h-6 rounded-lg bg-indigo-600 flex items-center justify-center text-white shadow">
             <Music2 className="w-3.5 h-3.5" />
@@ -131,7 +131,7 @@ export const MiniPlayer = () => {
       </div>
 
       {/* Bottom Timeline Progress Slider & Playback Controls */}
-      <div className="relative z-10 space-y-3 no-drag" style={{ WebkitAppRegion: 'no-drag' }}>
+      <div className="relative z-10 space-y-3 titlebar-no-drag" style={{ WebkitAppRegion: 'no-drag' }}>
         <div className="w-full border-t border-white/10 pt-2"></div>
 
         {/* Timeline Seek Bar */}

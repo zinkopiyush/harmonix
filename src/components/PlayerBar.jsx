@@ -21,7 +21,6 @@ import {
   Gauge,
   Music,
   Maximize2,
-  MoreHorizontal,
 } from 'lucide-react';
 
 export const PlayerBar = () => {
@@ -52,7 +51,7 @@ export const PlayerBar = () => {
     setActiveTab,
   } = useAudio();
 
-  const [showMoreMenu, setShowMoreMenu] = useState(false);
+  const [showSpeedMenu, setShowSpeedMenu] = useState(false);
   const [imgError, setImgError] = useState(false);
   const [isBigCoverOpen, setIsBigCoverOpen] = useState(false);
 
@@ -151,7 +150,7 @@ export const PlayerBar = () => {
 
             <button
               onClick={handlePrevTrack}
-              title="Previous Track (Shift + Left Arrow)"
+              title="Previous Track (Ctrl + Left Arrow)"
               className="text-gray-300 hover:text-white transition-colors cursor-pointer"
             >
               <SkipBack className="w-5 h-5 fill-current" />
@@ -171,7 +170,7 @@ export const PlayerBar = () => {
 
             <button
               onClick={() => handleNextTrack(false)}
-              title="Next Track (Shift + Right Arrow)"
+              title="Next Track (Ctrl + Right Arrow)"
               className="text-gray-300 hover:text-white transition-colors cursor-pointer"
             >
               <SkipForward className="w-5 h-5 fill-current" />
@@ -216,7 +215,7 @@ export const PlayerBar = () => {
         </div>
 
         {/* Right Feature Controls */}
-        <div className="flex items-center justify-end gap-2 w-60 min-w-[200px] flex-shrink-0">
+        <div className="flex items-center justify-end gap-1.5 w-60 min-w-[200px] flex-shrink-0">
           <button
             onClick={() => setActiveTab(activeTab === 'visualizer' ? 'songs' : 'visualizer')}
             title="Visualizer"
@@ -246,6 +245,7 @@ export const PlayerBar = () => {
           </button>
 
           <button
+            data-testid="queue-toggle-btn"
             onClick={() => setIsQueueOpen(!isQueueOpen)}
             title="Play Queue"
             className={`p-2 rounded-lg transition-colors cursor-pointer ${
@@ -255,51 +255,51 @@ export const PlayerBar = () => {
             <ListMusic className="w-4 h-4" />
           </button>
 
-          {/* Speed Options Menu */}
+          {/* Replaced 3-dot icon with Speed Gauge Icon directly */}
           <div className="relative">
             <button
-              onClick={() => setShowMoreMenu(!showMoreMenu)}
-              title="Playback Speed Options"
-              className="p-2 text-gray-400 hover:text-white rounded-lg hover:bg-white/10 transition-colors cursor-pointer"
+              onClick={() => setShowSpeedMenu(!showSpeedMenu)}
+              title={`Playback Speed (${playbackRate}x)`}
+              className={`p-2 rounded-lg transition-colors cursor-pointer ${
+                playbackRate !== 1.0 ? 'text-indigo-400 bg-indigo-500/20' : 'text-gray-400 hover:text-white'
+              }`}
             >
-              <MoreHorizontal className="w-4 h-4" />
+              <Gauge className="w-4 h-4" />
             </button>
 
-            {showMoreMenu && (
-              <div className="absolute right-0 bottom-12 bg-[#161622] border border-white/10 rounded-xl shadow-2xl p-3 w-48 z-50 text-xs space-y-2">
-                <div>
-                  <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-1.5 flex items-center gap-1">
-                    <Gauge className="w-3.5 h-3.5 text-indigo-400" />
-                    <span>Playback Speed ({playbackRate}x)</span>
-                  </label>
-                  <div className="grid grid-cols-3 gap-1">
-                    {speedOptions.map((rate) => (
-                      <button
-                        key={rate}
-                        onClick={() => {
-                          changePlaybackRate(rate);
-                          setShowMoreMenu(false);
-                        }}
-                        className={`py-1 text-[11px] font-semibold rounded transition-colors cursor-pointer ${
-                          playbackRate === rate
-                            ? 'bg-indigo-600 text-white'
-                            : 'bg-white/5 text-gray-300 hover:bg-white/10'
-                        }`}
-                      >
-                        {rate}x
-                      </button>
-                    ))}
-                  </div>
+            {showSpeedMenu && (
+              <div className="absolute right-0 bottom-12 bg-[#161622] border border-white/10 rounded-xl shadow-2xl p-3 w-44 z-50 text-xs space-y-2">
+                <div className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-1 flex items-center gap-1">
+                  <Gauge className="w-3.5 h-3.5 text-indigo-400" />
+                  <span>Speed ({playbackRate}x)</span>
+                </div>
+                <div className="grid grid-cols-3 gap-1">
+                  {speedOptions.map((rate) => (
+                    <button
+                      key={rate}
+                      onClick={() => {
+                        changePlaybackRate(rate);
+                        setShowSpeedMenu(false);
+                      }}
+                      className={`py-1 text-[11px] font-semibold rounded transition-colors cursor-pointer ${
+                        playbackRate === rate
+                          ? 'bg-indigo-600 text-white'
+                          : 'bg-white/5 text-gray-300 hover:bg-white/10'
+                      }`}
+                    >
+                      {rate}x
+                    </button>
+                  ))}
                 </div>
               </div>
             )}
           </div>
 
-          {/* Interactive Mouse Wheel Scrollable Volume Control Bar */}
+          {/* Mouse Wheel Scrollable Volume Bar */}
           <div
             onWheel={handleVolumeWheel}
             title="Scroll mouse wheel here to adjust volume"
-            className="flex items-center gap-1.5 ml-1 p-1 rounded-lg hover:bg-white/5 transition-colors"
+            className="flex items-center gap-1.5 ml-1 p-1 rounded-lg hover:bg-white/5 transition-colors cursor-pointer"
           >
             <button onClick={toggleMute} className="text-gray-400 hover:text-white cursor-pointer">
               {isMuted || volume === 0 ? (
@@ -317,7 +317,7 @@ export const PlayerBar = () => {
               step={0.01}
               value={isMuted ? 0 : volume}
               onChange={(e) => changeVolume(parseFloat(e.target.value))}
-              className="w-20 cursor-pointer"
+              className="w-16 sm:w-20 cursor-pointer"
               style={{
                 background: `linear-gradient(to right, #6366f1 0%, #6366f1 ${volumePercent}%, rgba(255, 255, 255, 0.15) ${volumePercent}%, rgba(255, 255, 255, 0.15) 100%)`,
               }}

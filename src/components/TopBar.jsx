@@ -58,7 +58,7 @@ export const TopBar = () => {
   };
 
   return (
-    <header className="h-14 bg-[#0d0d14] border-b border-white/10 flex items-center justify-between px-4 select-none drag-header z-30">
+    <header className="h-14 bg-[#0d0d14] border-b border-white/10 flex items-center justify-between px-4 select-none titlebar-drag z-30">
       {/* App Logo & Title */}
       <div className="flex items-center gap-3 no-drag" style={{ WebkitAppRegion: 'no-drag' }}>
         <div className="w-8 h-8 rounded-xl bg-indigo-600 flex items-center justify-center text-white shadow-lg shadow-indigo-600/40">
