@@ -376,6 +376,39 @@ export const AudioProvider = ({ children }) => {
     }
   };
 
+  // Natively hook into Windows 11/macOS Media Transport Controls (enables touchpad sliding & media keys)
+  useEffect(() => {
+    if ('mediaSession' in navigator) {
+      navigator.mediaSession.setActionHandler('play', () => {
+        if (!isPlaying) togglePlay();
+      });
+      navigator.mediaSession.setActionHandler('pause', () => {
+        if (isPlaying) togglePlay();
+      });
+      navigator.mediaSession.setActionHandler('previoustrack', handlePrevTrack);
+      navigator.mediaSession.setActionHandler('nexttrack', () => handleNextTrack(false));
+    }
+  }); // Runs after every render to capture the latest handler closures without stale state
+
+  useEffect(() => {
+    if ('mediaSession' in navigator && currentTrack) {
+      navigator.mediaSession.metadata = new MediaMetadata({
+        title: currentTrack.title || 'Unknown Title',
+        artist: currentTrack.artist || 'Unknown Artist',
+        album: currentTrack.album || 'Unknown Album',
+        artwork: currentTrack.picture
+          ? [
+              {
+                src: currentTrack.picture,
+                sizes: '512x512',
+                type: 'image/jpeg',
+              },
+            ]
+          : [],
+      });
+    }
+  }, [currentTrack]);
+
   const seekTo = (newTime) => {
     audioRef.current.currentTime = newTime;
     setCurrentTime(newTime);
