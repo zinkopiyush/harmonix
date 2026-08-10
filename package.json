@@ -30,6 +30,7 @@
       ]
     },
     "nsis": {
+      "artifactName": "Harmonix-Standard-Installer.exe",
       "oneClick": true,
       "perMachine": false,
       "allowToChangeInstallationDirectory": false,
@@ -38,7 +39,7 @@
       "shortcutName": "Harmonix"
     },
     "portable": {
-      "artifactName": "Harmonix-Standalone.exe"
+      "artifactName": "Harmonix-Standalone-Portable.exe"
     }
   },
   "dependencies": {
