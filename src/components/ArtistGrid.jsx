@@ -1,10 +1,11 @@
 import React, { useState, useRef } from 'react';
 import { useAudio } from '../context/AudioContext';
-import { Users, Play, Music, Mic2 } from 'lucide-react';
+import { Users, Play, Music, Mic2, ListPlus, ArrowRightToLine } from 'lucide-react';
 
 export const ArtistGrid = () => {
-  const { artistsMap, playTrack } = useAudio();
+  const { artistsMap, playTrack, playNext, addToQueue } = useAudio();
   const [selectedArtist, setSelectedArtist] = useState(null);
+  const [contextMenu, setContextMenu] = useState(null);
   const [displayCount, setDisplayCount] = useState(24);
   const containerRef = useRef(null);
 
@@ -29,7 +30,8 @@ export const ArtistGrid = () => {
     <div
       ref={containerRef}
       onScroll={handleScroll}
-      className="p-6 h-full overflow-y-auto custom-scrollbar select-none"
+      onClick={() => setContextMenu(null)}
+      className="p-6 h-full overflow-y-auto custom-scrollbar select-none relative"
     >
       <div className="flex items-center justify-between mb-6">
         <div>
@@ -55,6 +57,14 @@ export const ArtistGrid = () => {
             <div
               key={artist.name}
               onClick={() => setSelectedArtist(artist)}
+              onContextMenu={(e) => {
+                e.preventDefault();
+                setContextMenu({
+                  x: e.clientX,
+                  y: e.clientY,
+                  artist,
+                });
+              }}
               className="group bg-[#13131c] hover:bg-[#191926] border border-white/5 hover:border-indigo-500/40 rounded-2xl p-4 transition-all duration-300 shadow-lg hover:shadow-indigo-500/10 cursor-pointer flex flex-col items-center text-center justify-between"
             >
               {/* Circular Avatar */}
@@ -166,6 +176,52 @@ export const ArtistGrid = () => {
               ))}
             </div>
           </div>
+        </div>
+      )}
+
+      {/* Right-Click Context Menu */}
+      {contextMenu && (
+        <div
+          style={{ top: Math.min(contextMenu.y, window.innerHeight - 150), left: Math.min(contextMenu.x, window.innerWidth - 200) }}
+          onClick={(e) => e.stopPropagation()}
+          className="fixed z-50 bg-[#161622] border border-white/15 rounded-xl shadow-2xl p-1.5 w-48 text-xs animate-in fade-in zoom-in-95 duration-150"
+        >
+          <button
+            onClick={() => {
+              handlePlayArtist(contextMenu.artist);
+              setContextMenu(null);
+            }}
+            className="w-full flex items-center gap-2 px-3 py-2 text-left rounded-lg text-gray-200 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
+          >
+            <Play className="w-4 h-4 text-indigo-400 fill-current" />
+            <span>Play Artist</span>
+          </button>
+
+          <button
+            onClick={() => {
+              if (contextMenu.artist.tracks.length > 0) {
+                playNext(contextMenu.artist.tracks);
+              }
+              setContextMenu(null);
+            }}
+            className="w-full flex items-center gap-2 px-3 py-2 text-left rounded-lg text-gray-200 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
+          >
+            <ArrowRightToLine className="w-4 h-4 text-indigo-400" />
+            <span>Play Next</span>
+          </button>
+
+          <button
+            onClick={() => {
+              if (contextMenu.artist.tracks.length > 0) {
+                addToQueue(contextMenu.artist.tracks);
+              }
+              setContextMenu(null);
+            }}
+            className="w-full flex items-center gap-2 px-3 py-2 text-left rounded-lg text-gray-200 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
+          >
+            <ListPlus className="w-4 h-4 text-indigo-400" />
+            <span>Add to Queue</span>
+          </button>
         </div>
       )}
     </div>

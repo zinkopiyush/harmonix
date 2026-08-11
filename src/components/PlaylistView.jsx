@@ -14,6 +14,8 @@ import {
   Music,
   ArrowLeft,
   Crop,
+  ListPlus,
+  ArrowRightToLine,
 } from 'lucide-react';
 
 export const PlaylistView = () => {
@@ -28,6 +30,8 @@ export const PlaylistView = () => {
     importFolderAsPlaylist,
     addFilesToPlaylist,
     updatePlaylistCover,
+    playNext,
+    addToQueue,
   } = useAudio();
 
   const [activePlaylistId, setActivePlaylistId] = useState(null);
@@ -317,6 +321,38 @@ export const PlaylistView = () => {
           >
             <Play className="w-4 h-4 text-indigo-400 fill-current" />
             <span>Play Playlist</span>
+          </button>
+
+          <button
+            onClick={() => {
+              const playlistTrackObjs = contextMenu.playlist.trackIds
+                .map((id) => tracks.find((t) => t.id === id))
+                .filter(Boolean);
+              if (playlistTrackObjs.length > 0) {
+                playNext(playlistTrackObjs);
+              }
+              setContextMenu(null);
+            }}
+            className="w-full flex items-center gap-2 px-3 py-2 text-left rounded-lg text-gray-200 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
+          >
+            <ArrowRightToLine className="w-4 h-4 text-indigo-400" />
+            <span>Play Next</span>
+          </button>
+
+          <button
+            onClick={() => {
+              const playlistTrackObjs = contextMenu.playlist.trackIds
+                .map((id) => tracks.find((t) => t.id === id))
+                .filter(Boolean);
+              if (playlistTrackObjs.length > 0) {
+                addToQueue(playlistTrackObjs);
+              }
+              setContextMenu(null);
+            }}
+            className="w-full flex items-center gap-2 px-3 py-2 text-left rounded-lg text-gray-200 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
+          >
+            <ListPlus className="w-4 h-4 text-indigo-400" />
+            <span>Add to Queue</span>
           </button>
 
           <button

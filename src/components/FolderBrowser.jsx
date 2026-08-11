@@ -1,10 +1,10 @@
 import React, { useMemo, useState } from 'react';
 import { useAudio } from '../context/AudioContext';
 import { TrackList } from './TrackList';
-import { FolderTree, Folder, HardDrive, Play, ListMusic } from 'lucide-react';
+import { FolderTree, Folder, HardDrive, Play, ListMusic, ListPlus, ArrowRightToLine } from 'lucide-react';
 
 export const FolderBrowser = () => {
-  const { tracks, currentFolder, scanFolder, playTrack, createPlaylistWithTracks } = useAudio();
+  const { tracks, currentFolder, scanFolder, playTrack, createPlaylistWithTracks, playNext, addToQueue } = useAudio();
 
   const foldersMap = useMemo(() => {
     const map = new Map();
@@ -129,6 +129,32 @@ export const FolderBrowser = () => {
           >
             <Play className="w-4 h-4 text-indigo-400" />
             Play Folder
+          </button>
+
+          <button
+            className="w-full text-left px-4 py-2 text-sm text-gray-200 hover:bg-white/10 hover:text-white flex items-center gap-3 transition-colors cursor-pointer"
+            onClick={() => {
+              if (contextMenu.files.length > 0) {
+                playNext(contextMenu.files);
+              }
+              setContextMenu(null);
+            }}
+          >
+            <ArrowRightToLine className="w-4 h-4 text-indigo-400" />
+            Play Next
+          </button>
+
+          <button
+            className="w-full text-left px-4 py-2 text-sm text-gray-200 hover:bg-white/10 hover:text-white flex items-center gap-3 transition-colors cursor-pointer"
+            onClick={() => {
+              if (contextMenu.files.length > 0) {
+                addToQueue(contextMenu.files);
+              }
+              setContextMenu(null);
+            }}
+          >
+            <ListPlus className="w-4 h-4 text-indigo-400" />
+            Add to Queue
           </button>
           
           <button

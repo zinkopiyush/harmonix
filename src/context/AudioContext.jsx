@@ -161,7 +161,7 @@ export const AudioProvider = ({ children }) => {
 
       const savedVol = await getSettingDB('volume', 0.8);
       setVolumeState(savedVol);
-      audioRef.current.volume = savedVol;
+      audioRef.current.volume = Math.pow(savedVol, 3);
 
       const savedEqPreset = await getSettingDB('eqPreset', 'Flat');
       setEqPreset(savedEqPreset);
@@ -271,7 +271,7 @@ export const AudioProvider = ({ children }) => {
 
     audioRef.current.src = audioSrc;
     audioRef.current.playbackRate = playbackRate;
-    audioRef.current.volume = isMuted ? 0 : volume;
+    audioRef.current.volume = isMuted ? 0 : Math.pow(volume, 3);
 
     audioRef.current
       .play()
@@ -417,14 +417,14 @@ export const AudioProvider = ({ children }) => {
   const changeVolume = (val) => {
     const newVol = Math.max(0, Math.min(1, val));
     setVolumeState(newVol);
-    audioRef.current.volume = isMuted ? 0 : newVol;
+    audioRef.current.volume = isMuted ? 0 : Math.pow(newVol, 3);
     setSettingDB('volume', newVol);
   };
 
   const toggleMute = () => {
     const nextMute = !isMuted;
     setIsMuted(nextMute);
-    audioRef.current.volume = nextMute ? 0 : volume;
+    audioRef.current.volume = nextMute ? 0 : Math.pow(volume, 3);
   };
 
   const changePlaybackRate = (rate) => {
@@ -857,14 +857,24 @@ export const AudioProvider = ({ children }) => {
     if (target) await savePlaylistToDB(target);
   };
 
-  const addToQueue = (track) => {
-    setQueue((prev) => [...prev, track]);
+  const addToQueue = (trackOrTracks) => {
+    setQueue((prev) => {
+      if (Array.isArray(trackOrTracks)) {
+        return [...prev, ...trackOrTracks];
+      }
+      return [...prev, trackOrTracks];
+    });
   };
 
-  const playNext = (track) => {
+  const playNext = (trackOrTracks) => {
     setQueue((prev) => {
       const copy = [...prev];
-      copy.splice(queueIndex + 1, 0, { ...track, _isManualNext: true });
+      if (Array.isArray(trackOrTracks)) {
+        const markedTracks = trackOrTracks.map((t) => ({ ...t, _isManualNext: true }));
+        copy.splice(queueIndex + 1, 0, ...markedTracks);
+      } else {
+        copy.splice(queueIndex + 1, 0, { ...trackOrTracks, _isManualNext: true });
+      }
       return copy;
     });
   };
