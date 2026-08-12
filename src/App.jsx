@@ -1,6 +1,7 @@
 import React, { useState, Suspense, lazy } from 'react';
-import { useAudio } from './context/AudioContext';
+import { useAudio, AudioProvider } from './context/AudioContext';
 import { TopBar } from './components/TopBar';
+import { ThemeProvider } from './context/ThemeContext';
 import { Sidebar } from './components/Sidebar';
 import { PlayerBar } from './components/PlayerBar';
 import { TrackList } from './components/TrackList';
@@ -21,9 +22,9 @@ const MiniPlayer = lazy(() => import('./components/MiniPlayer').then((m) => ({ d
 
 // Minimal Loading Spinner Placeholder
 const ViewLoader = () => (
-  <div className="flex-1 flex items-center justify-center p-8 text-indigo-400">
+  <div className="flex-1 flex items-center justify-center p-8 text-accent">
     <div className="flex items-center gap-3">
-      <div className="w-5 h-5 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin"></div>
+      <div className="w-5 h-5 border-2 border-accent border-t-transparent rounded-full animate-spin"></div>
       <span className="text-xs font-semibold text-gray-400">Loading View...</span>
     </div>
   </div>
@@ -77,7 +78,7 @@ export function AppContent() {
           <div className="px-6 py-3 border-b border-white/5 flex items-center gap-3">
             <button
               onClick={() => setSelectedAlbum(null)}
-              className="text-xs text-indigo-400 hover:text-indigo-300 font-medium cursor-pointer"
+              className="text-xs text-accent hover:text-accent font-medium cursor-pointer"
             >
               ← Back to Albums
             </button>
@@ -97,7 +98,7 @@ export function AppContent() {
           <div className="px-6 py-3 border-b border-white/5 flex items-center gap-3">
             <button
               onClick={() => setSelectedArtist(null)}
-              className="text-xs text-indigo-400 hover:text-indigo-300 font-medium cursor-pointer"
+              className="text-xs text-accent hover:text-accent font-medium cursor-pointer"
             >
               ← Back to Artists
             </button>
@@ -117,7 +118,7 @@ export function AppContent() {
           <div className="px-6 py-3 border-b border-white/5 flex items-center gap-3">
             <button
               onClick={() => setSelectedGenre(null)}
-              className="text-xs text-indigo-400 hover:text-indigo-300 font-medium cursor-pointer"
+              className="text-xs text-accent hover:text-accent font-medium cursor-pointer"
             >
               ← Back to Genres
             </button>
@@ -190,11 +191,13 @@ export function AppContent() {
   };
 
   return (
-    <div className="flex flex-col h-screen w-screen bg-[#0f0f13] text-gray-100 overflow-hidden font-sans antialiased select-none transform-gpu">
+    <div className="flex flex-col h-screen w-screen bg-bg-primary text-text-primary overflow-hidden font-sans antialiased select-none transform-gpu">
+      {/* Top Title Bar (Draggable) */}
       <TopBar />
 
-      {/* Main Content Layout */}
-      <div className="flex-1 flex overflow-hidden relative">
+      {/* Main Layout Body */}
+      <div className="flex-1 flex min-h-0 relative">
+        {/* Fixed Width Sidebar Navigation */}
         <Sidebar
           sidebarWidth={sidebarWidth}
           setSidebarWidth={setSidebarWidth}
@@ -202,10 +205,11 @@ export function AppContent() {
           setIsCollapsed={setIsSidebarCollapsed}
         />
 
-        <main className="flex-1 flex flex-col min-w-0 bg-[#0f0f13] relative overflow-hidden">
+        {/* Dynamic Center Main Content Area */}
+        <main className="flex-1 flex flex-col min-w-0 bg-bg-primary relative overflow-hidden">
           {/* Scanning Progress Overlay Banner */}
           {isScanning && (
-            <div className="bg-indigo-600/90 text-white px-6 py-2 flex items-center justify-between text-xs shadow-lg border-b border-indigo-400/30 z-30">
+            <div className="bg-accent/90 text-white px-6 py-2 flex items-center justify-between text-xs shadow-lg border-b border-accent/30 z-30">
               <div className="flex items-center gap-3 font-semibold">
                 <div className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
                 <span>
@@ -255,5 +259,11 @@ export function AppContent() {
 }
 
 export default function App() {
-  return <AppContent />;
+  return (
+    <ThemeProvider>
+      <AudioProvider>
+        <AppContent />
+      </AudioProvider>
+    </ThemeProvider>
+  );
 }

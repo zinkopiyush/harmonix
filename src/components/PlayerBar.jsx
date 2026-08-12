@@ -21,6 +21,7 @@ import {
   Gauge,
   Music,
   Maximize2,
+  Mic2,
 } from 'lucide-react';
 
 export const PlayerBar = () => {
@@ -72,13 +73,13 @@ export const PlayerBar = () => {
 
   return (
     <>
-      <footer className="h-20 bg-[#0d0d14] border-t border-white/10 flex items-center justify-between px-4 select-none relative z-40">
+      <footer className="h-20 bg-bg-secondary border-t border-border-primary flex items-center justify-between px-4 select-none relative z-40">
         {/* Left Track Info Section */}
         <div className="flex items-center gap-3 w-60 min-w-[200px] flex-shrink-0">
           {currentTrack ? (
             <>
               <div
-                className="w-12 h-12 rounded-xl overflow-hidden flex-shrink-0 shadow-lg relative group cursor-pointer border border-white/10"
+                className="w-12 h-12 rounded-xl overflow-hidden flex-shrink-0 shadow-lg relative group cursor-pointer border border-border-primary"
                 onClick={() => setIsBigCoverOpen(true)}
                 title="Expand Big Cover Art"
                 style={{ background: albumGradient }}
@@ -91,7 +92,7 @@ export const PlayerBar = () => {
                     className="w-full h-full object-cover"
                   />
                 ) : (
-                  <div className="w-full h-full flex items-center justify-center text-white/80">
+                  <div className="w-full h-full flex items-center justify-center text-text-muted">
                     <Music className="w-5 h-5" />
                   </div>
                 )}
@@ -100,36 +101,23 @@ export const PlayerBar = () => {
                 </div>
               </div>
 
-              <div className="overflow-hidden min-w-0 flex-1">
-                <div className="flex items-center gap-2">
-                  <h4
-                    className="text-xs font-bold text-gray-100 truncate hover:underline cursor-pointer"
-                    onClick={() => setIsBigCoverOpen(true)}
-                  >
-                    {currentTrack.title}
-                  </h4>
-                  <button
-                    onClick={() => toggleFavorite(currentTrack.id)}
-                    className="text-gray-400 hover:text-pink-500 transition-colors flex-shrink-0 cursor-pointer"
-                  >
-                    <Heart
-                      className={`w-3.5 h-3.5 ${
-                        currentTrack.isFavorite ? 'text-pink-500 fill-pink-500' : ''
-                      }`}
-                    />
-                  </button>
-                </div>
-                <p className="text-[11px] text-gray-400 truncate mt-0.5">{currentTrack.artist}</p>
+              <div className="flex flex-col min-w-0 flex-1">
+                <span className="text-sm font-bold text-text-primary truncate">
+                  {currentTrack.title}
+                </span>
+                <span className="text-xs text-text-muted truncate">
+                  {currentTrack.artist}
+                </span>
               </div>
             </>
           ) : (
-            <div className="flex items-center gap-3 text-gray-500 text-xs font-medium">
-              <div className="w-12 h-12 rounded-xl bg-white/5 border border-white/5 flex items-center justify-center">
-                <Music className="w-5 h-5 text-gray-600" />
+            <div className="flex items-center gap-3 text-text-muted text-xs font-medium">
+              <div className="w-12 h-12 rounded-xl bg-bg-tertiary border border-border-primary flex items-center justify-center">
+                <Music className="w-5 h-5 text-text-muted" />
               </div>
               <div>
-                <p className="text-gray-300 font-medium">No Track Playing</p>
-                <p className="text-[10px] text-gray-500">Select a song to play</p>
+                <p className="text-text-primary font-medium">No Track Playing</p>
+                <p className="text-[10px] text-text-muted">Select a song to play</p>
               </div>
             </div>
           )}
@@ -137,12 +125,12 @@ export const PlayerBar = () => {
 
         {/* Center Controls & Progress Bar */}
         <div className="flex-1 max-w-xl px-4 flex flex-col items-center gap-1.5">
-          <div className="flex items-center gap-5">
+          <div className="flex items-center gap-4 text-text-muted">
             <button
               onClick={() => setIsShuffle(!isShuffle)}
               title={isShuffle ? 'Shuffle On' : 'Shuffle Off'}
-              className={`p-1.5 rounded-full transition-colors cursor-pointer ${
-                isShuffle ? 'text-indigo-400 bg-indigo-500/20' : 'text-gray-400 hover:text-white'
+              className={`p-2 rounded-full transition-all ${
+                isShuffle ? 'text-accent hover:bg-accent/10' : 'hover:text-text-primary hover:bg-bg-hover'
               }`}
             >
               <Shuffle className="w-4 h-4" />
@@ -150,8 +138,8 @@ export const PlayerBar = () => {
 
             <button
               onClick={handlePrevTrack}
-              title="Previous Track (Ctrl + Left Arrow)"
-              className="text-gray-300 hover:text-white transition-colors cursor-pointer"
+              title="Previous Track"
+              className="p-2 rounded-full hover:text-text-primary hover:bg-bg-hover transition-colors"
             >
               <SkipBack className="w-5 h-5 fill-current" />
             </button>
@@ -159,7 +147,7 @@ export const PlayerBar = () => {
             <button
               onClick={togglePlay}
               title={isPlaying ? 'Pause' : 'Play'}
-              className="w-10 h-10 rounded-full bg-indigo-600 hover:bg-indigo-500 text-white flex items-center justify-center shadow-lg shadow-indigo-600/40 hover:scale-105 transition-all cursor-pointer"
+              className="w-10 h-10 flex items-center justify-center rounded-full bg-text-primary text-bg-primary hover:scale-105 transition-all shadow-md"
             >
               {isPlaying ? (
                 <Pause className="w-5 h-5 fill-current" />
@@ -170,8 +158,8 @@ export const PlayerBar = () => {
 
             <button
               onClick={() => handleNextTrack(false)}
-              title="Next Track (Ctrl + Right Arrow)"
-              className="text-gray-300 hover:text-white transition-colors cursor-pointer"
+              title="Next Track"
+              className="p-2 rounded-full hover:text-text-primary hover:bg-bg-hover transition-colors"
             >
               <SkipForward className="w-5 h-5 fill-current" />
             </button>
@@ -183,8 +171,8 @@ export const PlayerBar = () => {
                 else setRepeatMode('off');
               }}
               title={`Repeat: ${repeatMode}`}
-              className={`p-1.5 rounded-full transition-colors cursor-pointer ${
-                repeatMode !== 'off' ? 'text-indigo-400 bg-indigo-500/20' : 'text-gray-400 hover:text-white'
+              className={`p-2 rounded-full transition-all ${
+                repeatMode !== 'off' ? 'text-accent hover:bg-accent/10' : 'hover:text-text-primary hover:bg-bg-hover'
               }`}
             >
               {repeatMode === 'one' ? <Repeat1 className="w-4 h-4" /> : <Repeat className="w-4 h-4" />}
@@ -192,7 +180,7 @@ export const PlayerBar = () => {
           </div>
 
           <div className="w-full flex items-center gap-3">
-            <span className="text-[11px] font-mono text-gray-400 w-10 text-right">
+            <span className="text-[11px] font-mono text-text-muted w-10 text-right">
               {formatTime(currentTime)}
             </span>
 
@@ -202,13 +190,13 @@ export const PlayerBar = () => {
               max={duration || 100}
               value={currentTime}
               onChange={(e) => seekTo(parseFloat(e.target.value))}
-              className="flex-1"
+              className="flex-1 custom-slider"
               style={{
-                background: `linear-gradient(to right, #6366f1 0%, #6366f1 ${progressPercent}%, rgba(255, 255, 255, 0.15) ${progressPercent}%, rgba(255, 255, 255, 0.15) 100%)`,
+                background: `linear-gradient(to right, var(--accent) 0%, var(--accent) ${progressPercent}%, var(--border-secondary) ${progressPercent}%, var(--border-secondary) 100%)`
               }}
             />
 
-            <span className="text-[11px] font-mono text-gray-400 w-10">
+            <span className="text-[11px] font-mono text-text-muted w-10">
               {formatTime(duration)}
             </span>
           </div>
@@ -219,8 +207,8 @@ export const PlayerBar = () => {
           <button
             onClick={() => setActiveTab(activeTab === 'visualizer' ? 'songs' : 'visualizer')}
             title="Visualizer"
-            className={`p-2 rounded-lg transition-colors cursor-pointer ${
-              activeTab === 'visualizer' ? 'text-indigo-400 bg-indigo-500/20' : 'text-gray-400 hover:text-white'
+            className={`p-1.5 rounded-md transition-colors ${
+              activeTab === 'visualizer' ? 'bg-accent/20 text-accent' : 'hover:bg-bg-hover text-text-muted hover:text-text-primary'
             }`}
           >
             <Activity className="w-4 h-4" />
@@ -229,17 +217,17 @@ export const PlayerBar = () => {
           <button
             onClick={() => setActiveTab(activeTab === 'lyrics' ? 'songs' : 'lyrics')}
             title="Synced Lyrics"
-            className={`p-2 rounded-lg transition-colors cursor-pointer ${
-              activeTab === 'lyrics' ? 'text-indigo-400 bg-indigo-500/20' : 'text-gray-400 hover:text-white'
+            className={`p-1.5 rounded-md transition-colors ${
+              activeTab === 'lyrics' ? 'bg-accent/20 text-accent' : 'hover:bg-bg-hover text-text-muted hover:text-text-primary'
             }`}
           >
-            <Quote className="w-4 h-4" />
+            <Mic2 className="w-4 h-4" />
           </button>
 
           <button
             onClick={() => setIsEqModalOpen(true)}
             title="Equalizer"
-            className="p-2 text-gray-400 hover:text-white rounded-lg hover:bg-white/10 transition-colors cursor-pointer"
+            className="p-1.5 rounded-md hover:bg-bg-hover text-text-muted hover:text-text-primary transition-colors"
           >
             <Sliders className="w-4 h-4" />
           </button>
@@ -248,31 +236,27 @@ export const PlayerBar = () => {
             data-testid="queue-toggle-btn"
             onClick={() => setIsQueueOpen(!isQueueOpen)}
             title="Play Queue"
-            className={`p-2 rounded-lg transition-colors cursor-pointer ${
-              isQueueOpen ? 'text-indigo-400 bg-indigo-500/20' : 'text-gray-400 hover:text-white'
+            className={`p-1.5 rounded-md transition-colors ${
+              isQueueOpen ? 'bg-accent/20 text-accent' : 'hover:bg-bg-hover text-text-muted hover:text-text-primary'
             }`}
           >
             <ListMusic className="w-4 h-4" />
           </button>
 
-          {/* Replaced 3-dot icon with Speed Gauge Icon directly */}
           <div className="relative">
             <button
               onClick={() => setShowSpeedMenu(!showSpeedMenu)}
               title={`Playback Speed (${playbackRate}x)`}
-              className={`p-2 rounded-lg transition-colors cursor-pointer ${
-                playbackRate !== 1.0 ? 'text-indigo-400 bg-indigo-500/20' : 'text-gray-400 hover:text-white'
+              className={`p-1.5 rounded-md transition-colors ${
+                playbackRate !== 1.0 ? 'bg-accent/20 text-accent' : 'hover:bg-bg-hover text-text-muted hover:text-text-primary'
               }`}
             >
               <Gauge className="w-4 h-4" />
             </button>
 
             {showSpeedMenu && (
-              <div className="absolute right-0 bottom-12 bg-[#161622] border border-white/10 rounded-xl shadow-2xl p-3 w-44 z-50 text-xs space-y-2">
-                <div className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-1 flex items-center gap-1">
-                  <Gauge className="w-3.5 h-3.5 text-indigo-400" />
-                  <span>Speed ({playbackRate}x)</span>
-                </div>
+              <div className="absolute right-0 bottom-12 bg-bg-secondary border border-border-primary rounded-xl shadow-2xl p-3 w-44 z-50 text-xs space-y-2">
+                <div className="text-text-muted font-bold px-2 mb-2 uppercase tracking-wider">Speed</div>
                 <div className="grid grid-cols-3 gap-1">
                   {speedOptions.map((rate) => (
                     <button
@@ -281,10 +265,10 @@ export const PlayerBar = () => {
                         changePlaybackRate(rate);
                         setShowSpeedMenu(false);
                       }}
-                      className={`py-1 text-[11px] font-semibold rounded transition-colors cursor-pointer ${
+                      className={`py-1 text-[11px] font-semibold rounded transition-colors ${
                         playbackRate === rate
-                          ? 'bg-indigo-600 text-white'
-                          : 'bg-white/5 text-gray-300 hover:bg-white/10'
+                          ? 'bg-accent text-white'
+                          : 'bg-bg-tertiary text-text-primary hover:bg-bg-hover'
                       }`}
                     >
                       {rate}x
@@ -317,9 +301,9 @@ export const PlayerBar = () => {
               step={0.01}
               value={isMuted ? 0 : volume}
               onChange={(e) => changeVolume(parseFloat(e.target.value))}
-              className="w-16 sm:w-20 cursor-pointer"
+              className="w-16 sm:w-20 custom-slider"
               style={{
-                background: `linear-gradient(to right, #6366f1 0%, #6366f1 ${volumePercent}%, rgba(255, 255, 255, 0.15) ${volumePercent}%, rgba(255, 255, 255, 0.15) 100%)`,
+                background: `linear-gradient(to right, var(--accent) 0%, var(--accent) ${volumePercent}%, var(--border-secondary) ${volumePercent}%, var(--border-secondary) 100%)`
               }}
             />
           </div>

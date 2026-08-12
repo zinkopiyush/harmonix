@@ -64,7 +64,7 @@ export const BigCoverOverlay = ({ isOpen, onClose }) => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-[#09090e] text-white flex flex-col justify-between p-6 sm:p-10 select-none overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+    <div className="fixed inset-0 z-50 bg-bg-primary text-text-primary flex flex-col justify-between p-6 sm:p-10 select-none overflow-hidden animate-in fade-in zoom-in-95 duration-200">
       {/* Dynamic Ambient Background Glow */}
       <div
         className="absolute inset-0 opacity-25 blur-3xl pointer-events-none transition-all duration-700"
@@ -74,15 +74,15 @@ export const BigCoverOverlay = ({ isOpen, onClose }) => {
       {/* Top Overlay Header with Switcher Tabs + Equalizer Button */}
       <div className="relative z-10 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-full bg-indigo-500/20 text-indigo-400 flex items-center justify-center border border-indigo-500/30">
+          <div className="w-8 h-8 rounded-full bg-accent-hover/20 text-accent flex items-center justify-center border border-accent/30">
             <Music className="w-4 h-4" />
           </div>
           <div>
-            <h3 className="font-bold text-xs uppercase tracking-wider text-gray-400">
+            <h3 className="font-bold text-xs uppercase tracking-wider text-text-muted">
               Now Playing View
             </h3>
             {currentTrack.bitrate && (
-              <span className="text-[10px] font-mono text-indigo-300">
+              <span className="text-bg-secondary font-mono text-accent">
                 {currentTrack.bitrate} kbps • High Resolution
               </span>
             )}
@@ -91,13 +91,13 @@ export const BigCoverOverlay = ({ isOpen, onClose }) => {
 
         <div className="flex items-center gap-3">
           {/* Switcher Buttons: Cover Art, Lyrics, Visualizer, Equalizer */}
-          <div className="flex items-center gap-1 bg-white/10 p-1 rounded-xl border border-white/10">
+          <div className="flex items-center gap-1 bg-white/10 p-1 rounded-xl border border-border-primary">
             <button
               onClick={() => setActiveViewMode('cover')}
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
                 activeViewMode === 'cover'
-                  ? 'bg-indigo-600 text-white shadow'
-                  : 'text-gray-300 hover:text-white'
+                  ? 'bg-accent text-text-primary shadow'
+                  : 'text-gray-300 hover:text-text-primary'
               }`}
             >
               <Image className="w-3.5 h-3.5" />
@@ -108,8 +108,8 @@ export const BigCoverOverlay = ({ isOpen, onClose }) => {
               onClick={() => setActiveViewMode(activeViewMode === 'lyrics' ? 'cover' : 'lyrics')}
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
                 activeViewMode === 'lyrics'
-                  ? 'bg-indigo-600 text-white shadow'
-                  : 'text-gray-300 hover:text-white'
+                  ? 'bg-accent text-text-primary shadow'
+                  : 'text-gray-300 hover:text-text-primary'
               }`}
             >
               <Quote className="w-3.5 h-3.5" />
@@ -120,8 +120,8 @@ export const BigCoverOverlay = ({ isOpen, onClose }) => {
               onClick={() => setActiveViewMode(activeViewMode === 'visualizer' ? 'cover' : 'visualizer')}
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
                 activeViewMode === 'visualizer'
-                  ? 'bg-indigo-600 text-white shadow'
-                  : 'text-gray-300 hover:text-white'
+                  ? 'bg-accent text-text-primary shadow'
+                  : 'text-gray-300 hover:text-text-primary'
               }`}
             >
               <Activity className="w-3.5 h-3.5" />
@@ -131,16 +131,16 @@ export const BigCoverOverlay = ({ isOpen, onClose }) => {
             <button
               onClick={() => setIsEqModalOpen(true)}
               title="Open Audio Equalizer"
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-gray-300 hover:text-white hover:bg-white/10 transition-all cursor-pointer"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-gray-300 hover:text-text-primary hover:bg-bg-hover transition-all cursor-pointer"
             >
-              <Sliders className="w-3.5 h-3.5 text-indigo-400" />
+              <Sliders className="w-3.5 h-3.5 text-accent" />
               <span>Equalizer</span>
             </button>
           </div>
 
           <button
             onClick={onClose}
-            className="w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-gray-300 hover:text-white transition-colors cursor-pointer"
+            className="w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-gray-300 hover:text-text-primary transition-colors cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
@@ -153,7 +153,7 @@ export const BigCoverOverlay = ({ isOpen, onClose }) => {
           <div className="flex flex-col items-center justify-center text-center max-w-lg mx-auto space-y-6">
             {/* Centered 1:1 Album Artwork Box */}
             <div
-              className="w-64 h-64 sm:w-80 sm:h-80 md:w-88 md:h-88 rounded-3xl overflow-hidden shadow-2xl border border-white/20 relative group flex-shrink-0"
+              className="w-64 h-64 sm:w-80 sm:h-80 md:w-88 md:h-88 rounded-3xl overflow-hidden shadow-2xl border border-border-secondary relative group flex-shrink-0"
               style={{ background: albumGradient }}
             >
               {currentTrack.picture && !imgError ? (
@@ -164,7 +164,7 @@ export const BigCoverOverlay = ({ isOpen, onClose }) => {
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                 />
               ) : (
-                <div className="w-full h-full flex items-center justify-center text-white/80">
+                <div className="w-full h-full flex items-center justify-center text-text-primary/80">
                   <Music className="w-20 h-20" />
                 </div>
               )}
@@ -173,12 +173,12 @@ export const BigCoverOverlay = ({ isOpen, onClose }) => {
             {/* Centered Track Information */}
             <div className="space-y-2">
               <div className="flex items-center justify-center gap-3">
-                <h1 className="text-2xl sm:text-3xl font-extrabold text-white truncate drop-shadow-md">
+                <h1 className="text-2xl sm:text-3xl font-extrabold text-text-primary truncate drop-shadow-md">
                   {currentTrack.title}
                 </h1>
                 <button
                   onClick={() => toggleFavorite(currentTrack.id)}
-                  className="text-gray-400 hover:text-pink-500 transition-colors flex-shrink-0 cursor-pointer"
+                  className="text-text-muted hover:text-pink-500 transition-colors flex-shrink-0 cursor-pointer"
                 >
                   <Heart
                     className={`w-6 h-6 ${
@@ -188,11 +188,11 @@ export const BigCoverOverlay = ({ isOpen, onClose }) => {
                 </button>
               </div>
 
-              <p className="text-lg text-indigo-300 font-semibold truncate">
+              <p className="text-lg text-accent font-semibold truncate">
                 {currentTrack.artist}
               </p>
 
-              <div className="flex items-center justify-center gap-3 text-xs text-gray-400 font-mono pt-1">
+              <div className="flex items-center justify-center gap-3 text-xs text-text-muted font-mono pt-1">
                 <span>{currentTrack.album}</span>
                 <span>•</span>
                 <span>{currentTrack.genre || 'Unknown Genre'}</span>
@@ -208,13 +208,13 @@ export const BigCoverOverlay = ({ isOpen, onClose }) => {
         )}
 
         {activeViewMode === 'lyrics' && (
-          <div className="w-full h-full rounded-2xl bg-white/5 border border-white/10 overflow-hidden">
+          <div className="w-full h-full rounded-2xl bg-bg-tertiary border border-border-primary overflow-hidden">
             <LyricsView />
           </div>
         )}
 
         {activeViewMode === 'visualizer' && (
-          <div className="w-full h-full rounded-2xl bg-white/5 border border-white/10 overflow-hidden flex items-center justify-center">
+          <div className="w-full h-full rounded-2xl bg-bg-tertiary border border-border-primary overflow-hidden flex items-center justify-center">
             <VisualizerView />
           </div>
         )}
@@ -224,7 +224,7 @@ export const BigCoverOverlay = ({ isOpen, onClose }) => {
       <div className="relative z-10 w-full max-w-3xl mx-auto space-y-4">
         {/* Timeline Seek Bar */}
         <div className="w-full flex items-center gap-4">
-          <span className="text-xs font-mono text-gray-400 w-12 text-right">
+          <span className="text-xs font-mono text-text-muted w-12 text-right">
             {formatTime(currentTime)}
           </span>
 
@@ -234,13 +234,13 @@ export const BigCoverOverlay = ({ isOpen, onClose }) => {
             max={duration || 100}
             value={currentTime}
             onChange={(e) => seekTo(parseFloat(e.target.value))}
-            className="flex-1 cursor-pointer"
+            className="flex-1 custom-slider cursor-pointer"
             style={{
-              background: `linear-gradient(to right, #6366f1 0%, #6366f1 ${progressPercent}%, rgba(255, 255, 255, 0.15) ${progressPercent}%, rgba(255, 255, 255, 0.15) 100%)`,
+              background: `linear-gradient(to right, var(--accent) 0%, var(--accent) ${progressPercent}%, var(--border-secondary) ${progressPercent}%, var(--border-secondary) 100%)`,
             }}
           />
 
-          <span className="text-xs font-mono text-gray-400 w-12">
+          <span className="text-xs font-mono text-text-muted w-12">
             {formatTime(duration)}
           </span>
         </div>
@@ -251,7 +251,7 @@ export const BigCoverOverlay = ({ isOpen, onClose }) => {
             <button
               onClick={() => setIsShuffle(!isShuffle)}
               className={`p-2 rounded-full transition-colors cursor-pointer ${
-                isShuffle ? 'text-indigo-400 bg-indigo-500/20' : 'text-gray-400 hover:text-white'
+                isShuffle ? 'text-accent bg-accent-hover/20' : 'text-gray-400 hover:text-white'
               }`}
             >
               <Shuffle className="w-5 h-5" />
@@ -264,7 +264,7 @@ export const BigCoverOverlay = ({ isOpen, onClose }) => {
                 else setRepeatMode('off');
               }}
               className={`p-2 rounded-full transition-colors cursor-pointer ${
-                repeatMode !== 'off' ? 'text-indigo-400 bg-indigo-500/20' : 'text-gray-400 hover:text-white'
+                repeatMode !== 'off' ? 'text-accent bg-accent-hover/20' : 'text-gray-400 hover:text-white'
               }`}
             >
               {repeatMode === 'one' ? <Repeat1 className="w-5 h-5" /> : <Repeat className="w-5 h-5" />}
@@ -275,7 +275,7 @@ export const BigCoverOverlay = ({ isOpen, onClose }) => {
               title="Equalizer"
               className="p-2 text-gray-400 hover:text-white rounded-full transition-colors cursor-pointer"
             >
-              <Sliders className="w-5 h-5 text-indigo-400" />
+              <Sliders className="w-5 h-5 text-accent" />
             </button>
           </div>
 
@@ -290,7 +290,7 @@ export const BigCoverOverlay = ({ isOpen, onClose }) => {
 
             <button
               onClick={togglePlay}
-              className="w-14 h-14 rounded-full bg-indigo-600 hover:bg-indigo-500 text-white flex items-center justify-center shadow-xl shadow-indigo-600/50 hover:scale-105 transition-all cursor-pointer"
+              className="w-14 h-14 rounded-full bg-accent hover:bg-accent-hover text-white flex items-center justify-center shadow-xl shadow-black/20 hover:scale-105 transition-all cursor-pointer"
             >
               {isPlaying ? (
                 <Pause className="w-7 h-7 fill-current" />
@@ -330,9 +330,9 @@ export const BigCoverOverlay = ({ isOpen, onClose }) => {
               step={0.01}
               value={isMuted ? 0 : volume}
               onChange={(e) => changeVolume(parseFloat(e.target.value))}
-              className="w-24 cursor-pointer"
+              className="w-24 custom-slider cursor-pointer"
               style={{
-                background: `linear-gradient(to right, #6366f1 0%, #6366f1 ${volumePercent}%, rgba(255, 255, 255, 0.15) ${volumePercent}%, rgba(255, 255, 255, 0.15) 100%)`,
+                background: `linear-gradient(to right, var(--accent) 0%, var(--accent) ${volumePercent}%, var(--border-secondary) ${volumePercent}%, var(--border-secondary) 100%)`,
               }}
             />
           </div>

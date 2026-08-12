@@ -26,10 +26,10 @@ export const FolderBrowser = () => {
     const folderName = selectedFolderPath.split('\\').pop().split('/').pop();
     return (
       <div className="flex-1 flex flex-col overflow-hidden">
-        <div className="px-6 py-3 border-b border-white/5 flex items-center gap-3">
+        <div className="px-6 py-3 border-b border-border-secondary flex items-center gap-3">
           <button
             onClick={() => setSelectedFolderPath(null)}
-            className="text-xs text-indigo-400 hover:text-indigo-300 font-medium"
+            className="text-xs text-accent hover:text-accent font-medium"
           >
             ← Back to Folder Browser
           </button>
@@ -45,17 +45,17 @@ export const FolderBrowser = () => {
 
   return (
     <div className="flex-1 flex flex-col overflow-hidden relative" onClick={() => setContextMenu(null)}>
-      <div className="px-6 py-4 border-b border-white/5 flex items-center justify-between">
+      <div className="px-6 py-4 border-b border-border-secondary flex items-center justify-between">
         <div>
-          <h2 className="text-xl font-bold text-gray-100">Folder Browser</h2>
-          <p className="text-xs text-gray-400 mt-0.5">
+          <h2 className="text-xl font-bold text-text-primary">Folder Browser</h2>
+          <p className="text-xs text-text-secondary mt-0.5">
             {currentFolder ? `Active Root: ${currentFolder}` : 'Browse scanned local folders on disk'}
           </p>
         </div>
 
         <button
           onClick={scanFolder}
-          className="flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg text-xs font-semibold shadow transition-all"
+          className="flex items-center gap-2 px-4 py-2 bg-accent hover:bg-accent-hover text-text-primary rounded-lg text-xs font-semibold shadow transition-all"
         >
           <FolderTree className="w-4 h-4" />
           <span>Scan New Folder</span>
@@ -81,19 +81,19 @@ export const FolderBrowser = () => {
                       folderName: folderName,
                     });
                   }}
-                  className="glass-card p-4 rounded-xl cursor-pointer flex items-center gap-4 group hover:border-indigo-500/40"
+                  className="bg-bg-tertiary border border-border-primary p-4 rounded-xl cursor-pointer flex items-center gap-4 group hover:border-accent/40"
                 >
-                  <div className="w-12 h-12 rounded-lg bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 flex items-center justify-center flex-shrink-0">
+                  <div className="w-12 h-12 rounded-lg bg-accent-hover/10 text-accent border border-accent/20 flex items-center justify-center flex-shrink-0">
                     <Folder className="w-6 h-6" />
                   </div>
                   <div className="min-w-0 flex-1">
-                    <h4 className="font-semibold text-xs text-gray-100 group-hover:text-indigo-300 truncate">
+                    <h4 className="font-semibold text-xs text-text-primary group-hover:text-accent truncate">
                       {folderName}
                     </h4>
-                    <p className="text-[10px] text-gray-500 truncate mt-0.5" title={path}>
+                    <p className="text-[10px] text-text-muted truncate mt-0.5" title={path}>
                       {path}
                     </p>
-                    <span className="text-[10px] text-indigo-400 font-mono mt-1 block">
+                    <span className="text-[10px] text-accent font-mono mt-1 block">
                       {files.length} audio files
                     </span>
                   </div>
@@ -102,7 +102,7 @@ export const FolderBrowser = () => {
             })}
           </div>
         ) : (
-          <div className="h-full flex flex-col items-center justify-center text-gray-500 text-xs">
+          <div className="h-full flex flex-col items-center justify-center text-text-muted text-xs">
             <HardDrive className="w-12 h-12 mb-3 text-gray-600" />
             <p>No local audio folders scanned yet</p>
             <p className="text-[10px] text-gray-600 mt-1">
@@ -114,12 +114,12 @@ export const FolderBrowser = () => {
 
       {contextMenu && (
         <div
-          className="fixed z-50 bg-[#1e1e2d] border border-white/10 rounded-xl shadow-2xl py-2 min-w-[200px]"
+          className="fixed z-50 bg-bg-primary border border-border-primary rounded-xl shadow-2xl py-2 min-w-[200px]"
           style={{ top: Math.min(contextMenu.y, window.innerHeight - 100), left: Math.min(contextMenu.x, window.innerWidth - 200) }}
           onClick={(e) => e.stopPropagation()}
         >
           <button
-            className="w-full text-left px-4 py-2 text-sm text-gray-200 hover:bg-white/10 hover:text-white flex items-center gap-3 transition-colors cursor-pointer"
+            className="w-full text-left px-4 py-2 text-sm text-text-primary hover:bg-bg-hover flex items-center gap-3 transition-colors cursor-pointer"
             onClick={() => {
               if (contextMenu.files.length > 0) {
                 playTrack(contextMenu.files[0], contextMenu.files, 0);
@@ -127,12 +127,12 @@ export const FolderBrowser = () => {
               setContextMenu(null);
             }}
           >
-            <Play className="w-4 h-4 text-indigo-400" />
+            <Play className="w-4 h-4 text-accent" />
             Play Folder
           </button>
 
           <button
-            className="w-full text-left px-4 py-2 text-sm text-gray-200 hover:bg-white/10 hover:text-white flex items-center gap-3 transition-colors cursor-pointer"
+            className="w-full text-left px-4 py-2 text-sm text-gray-200 hover:bg-white/10 hover:text-text-primary flex items-center gap-3 transition-colors cursor-pointer"
             onClick={() => {
               if (contextMenu.files.length > 0) {
                 playNext(contextMenu.files);
@@ -140,12 +140,12 @@ export const FolderBrowser = () => {
               setContextMenu(null);
             }}
           >
-            <ArrowRightToLine className="w-4 h-4 text-indigo-400" />
+            <ArrowRightToLine className="w-4 h-4 text-accent" />
             Play Next
           </button>
 
           <button
-            className="w-full text-left px-4 py-2 text-sm text-gray-200 hover:bg-white/10 hover:text-white flex items-center gap-3 transition-colors cursor-pointer"
+            className="w-full text-left px-4 py-2 text-sm text-gray-200 hover:bg-white/10 hover:text-text-primary flex items-center gap-3 transition-colors cursor-pointer"
             onClick={() => {
               if (contextMenu.files.length > 0) {
                 addToQueue(contextMenu.files);
@@ -153,19 +153,19 @@ export const FolderBrowser = () => {
               setContextMenu(null);
             }}
           >
-            <ListPlus className="w-4 h-4 text-indigo-400" />
+            <ListPlus className="w-4 h-4 text-accent" />
             Add to Queue
           </button>
           
           <button
-            className="w-full text-left px-4 py-2 text-sm text-gray-200 hover:bg-white/10 hover:text-white flex items-center gap-3 transition-colors cursor-pointer"
+            className="w-full text-left px-4 py-2 text-sm text-gray-200 hover:bg-white/10 hover:text-text-primary flex items-center gap-3 transition-colors cursor-pointer"
             onClick={() => {
               const trackIds = contextMenu.files.map(f => f.id);
               createPlaylistWithTracks(contextMenu.folderName, trackIds);
               setContextMenu(null);
             }}
           >
-            <ListMusic className="w-4 h-4 text-indigo-400" />
+            <ListMusic className="w-4 h-4 text-accent" />
             Make a Playlist
           </button>
         </div>

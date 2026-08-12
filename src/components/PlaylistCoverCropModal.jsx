@@ -104,23 +104,23 @@ export const PlaylistCoverCropModal = ({ isOpen, imageSrc, onSave, onClose }) =>
   const previewParams = getRenderParams(PREVIEW_BOX_SIZE);
 
   return (
-    <div className="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4 select-none">
-      <div className="bg-[#14141f] border border-white/10 rounded-2xl shadow-2xl w-full max-w-md overflow-hidden flex flex-col animate-in fade-in zoom-in-95 duration-200">
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-md z-50 flex items-center justify-center p-4 select-none">
+      <div className="bg-bg-secondary border border-border-primary rounded-2xl shadow-2xl w-full max-w-md overflow-hidden flex flex-col animate-in fade-in zoom-in-95 duration-200">
         {/* Header */}
-        <div className="px-5 py-3.5 bg-[#1a1a29] border-b border-white/10 flex items-center justify-between">
+        <div className="px-5 py-3.5 bg-bg-tertiary border-b border-border-primary flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <div className="w-7 h-7 rounded-lg bg-indigo-500/20 text-indigo-400 border border-indigo-500/30 flex items-center justify-center">
+            <div className="w-7 h-7 rounded-lg bg-accent-hover/20 text-accent border border-accent/30 flex items-center justify-center">
               <Image className="w-3.5 h-3.5" />
             </div>
             <div>
-              <h3 className="font-bold text-xs text-gray-100">Adjust Playlist Cover</h3>
-              <p className="text-[10px] text-gray-400">Zoom and position your cover picture</p>
+              <h3 className="font-bold text-xs text-text-primary">Adjust Playlist Cover</h3>
+              <p className="text-[10px] text-text-muted">Zoom and position your cover picture</p>
             </div>
           </div>
 
           <button
             onClick={onClose}
-            className="p-1 text-gray-400 hover:text-white rounded-lg hover:bg-white/10 transition-colors"
+            className="p-1 text-text-muted hover:text-text-primary rounded-lg hover:bg-bg-hover transition-colors"
           >
             <X className="w-4 h-4" />
           </button>
@@ -129,7 +129,7 @@ export const PlaylistCoverCropModal = ({ isOpen, imageSrc, onSave, onClose }) =>
         {/* 1:1 Square Interactive Preview Box */}
         <div className="p-5 flex flex-col items-center gap-5">
           <div
-            className="w-64 h-64 rounded-2xl overflow-hidden relative border-2 border-indigo-500/40 shadow-2xl bg-[#0b0b10]"
+            className="w-64 h-64 rounded-2xl overflow-hidden relative border-2 border-accent/40 shadow-2xl bg-bg-primary"
             style={{ width: `${PREVIEW_BOX_SIZE}px`, height: `${PREVIEW_BOX_SIZE}px` }}
           >
             <img
@@ -145,7 +145,7 @@ export const PlaylistCoverCropModal = ({ isOpen, imageSrc, onSave, onClose }) =>
             />
 
             {/* 1:1 Grid Guidelines */}
-            <div className="absolute inset-0 border border-white/10 pointer-events-none grid grid-cols-3 grid-rows-3 opacity-30">
+            <div className="absolute inset-0 border border-border-primary pointer-events-none grid grid-cols-3 grid-rows-3 opacity-30">
               <div className="border-r border-b border-white/20"></div>
               <div className="border-r border-b border-white/20"></div>
               <div className="border-b border-white/20"></div>
@@ -164,10 +164,10 @@ export const PlaylistCoverCropModal = ({ isOpen, imageSrc, onSave, onClose }) =>
             <div className="space-y-1">
               <div className="flex justify-between items-center text-xs text-gray-300">
                 <span className="flex items-center gap-1 font-semibold text-[11px]">
-                  <ZoomIn className="w-3.5 h-3.5 text-indigo-400" />
+                  <ZoomIn className="w-3.5 h-3.5 text-accent" />
                   <span>Zoom Level</span>
                 </span>
-                <span className="font-mono text-indigo-400 text-xs">{zoom.toFixed(1)}x</span>
+                <span className="font-mono text-accent text-xs">{zoom.toFixed(1)}x</span>
               </div>
               <input
                 type="range"
@@ -176,9 +176,9 @@ export const PlaylistCoverCropModal = ({ isOpen, imageSrc, onSave, onClose }) =>
                 step={0.05}
                 value={zoom}
                 onChange={(e) => setZoom(parseFloat(e.target.value))}
-                className="w-full"
+                className="w-full custom-slider"
                 style={{
-                  background: `linear-gradient(to right, #6366f1 0%, #6366f1 ${((zoom - 1) / 2) * 100}%, rgba(255, 255, 255, 0.15) ${((zoom - 1) / 2) * 100}%, rgba(255, 255, 255, 0.15) 100%)`,
+                  background: `linear-gradient(to right, var(--accent) 0%, var(--accent) ${((zoom - 1) / 2) * 100}%, var(--border-secondary) ${((zoom - 1) / 2) * 100}%, var(--border-secondary) 100%)`,
                 }}
               />
             </div>
@@ -187,10 +187,10 @@ export const PlaylistCoverCropModal = ({ isOpen, imageSrc, onSave, onClose }) =>
             <div className="space-y-1">
               <div className="flex justify-between items-center text-xs text-gray-300">
                 <span className="flex items-center gap-1 font-semibold text-[11px]">
-                  <Move className="w-3.5 h-3.5 text-indigo-400" />
+                  <Move className="w-3.5 h-3.5 text-accent" />
                   <span>Horizontal Alignment (Left - Right)</span>
                 </span>
-                <span className="font-mono text-indigo-400 text-xs">{posX}%</span>
+                <span className="font-mono text-accent text-xs">{posX}%</span>
               </div>
               <input
                 type="range"
@@ -200,9 +200,9 @@ export const PlaylistCoverCropModal = ({ isOpen, imageSrc, onSave, onClose }) =>
                 value={posX}
                 disabled={previewParams.maxPanX <= 0}
                 onChange={(e) => setPosX(parseInt(e.target.value, 10))}
-                className="w-full"
+                className="w-full custom-slider"
                 style={{
-                  background: `linear-gradient(to right, #6366f1 0%, #6366f1 ${posX}%, rgba(255, 255, 255, 0.15) ${posX}%, rgba(255, 255, 255, 0.15) 100%)`,
+                  background: `linear-gradient(to right, var(--accent) 0%, var(--accent) ${posX}%, var(--border-secondary) ${posX}%, var(--border-secondary) 100%)`,
                 }}
               />
             </div>
@@ -211,10 +211,10 @@ export const PlaylistCoverCropModal = ({ isOpen, imageSrc, onSave, onClose }) =>
             <div className="space-y-1">
               <div className="flex justify-between items-center text-xs text-gray-300">
                 <span className="flex items-center gap-1 font-semibold text-[11px]">
-                  <Move className="w-3.5 h-3.5 text-indigo-400 rotate-90" />
+                  <Move className="w-3.5 h-3.5 text-accent rotate-90" />
                   <span>Vertical Alignment (Top - Bottom)</span>
                 </span>
-                <span className="font-mono text-indigo-400 text-xs">{posY}%</span>
+                <span className="font-mono text-accent text-xs">{posY}%</span>
               </div>
               <input
                 type="range"
@@ -224,9 +224,9 @@ export const PlaylistCoverCropModal = ({ isOpen, imageSrc, onSave, onClose }) =>
                 value={posY}
                 disabled={previewParams.maxPanY <= 0}
                 onChange={(e) => setPosY(parseInt(e.target.value, 10))}
-                className="w-full"
+                className="w-full custom-slider"
                 style={{
-                  background: `linear-gradient(to right, #6366f1 0%, #6366f1 ${posY}%, rgba(255, 255, 255, 0.15) ${posY}%, rgba(255, 255, 255, 0.15) 100%)`,
+                  background: `linear-gradient(to right, var(--accent) 0%, var(--accent) ${posY}%, var(--border-secondary) ${posY}%, var(--border-secondary) 100%)`,
                 }}
               />
             </div>
@@ -234,10 +234,10 @@ export const PlaylistCoverCropModal = ({ isOpen, imageSrc, onSave, onClose }) =>
         </div>
 
         {/* Footer */}
-        <div className="px-5 py-3 bg-[#11111a] border-t border-white/10 flex justify-between items-center">
+        <div className="px-5 py-3 bg-bg-tertiary border-t border-border-primary flex justify-between items-center">
           <button
             onClick={handleReset}
-            className="flex items-center gap-1 text-xs text-gray-400 hover:text-white transition-colors"
+            className="flex items-center gap-1 text-xs text-text-muted hover:text-text-primary transition-colors"
           >
             <RotateCcw className="w-3.5 h-3.5" />
             <span>Reset</span>
@@ -246,13 +246,13 @@ export const PlaylistCoverCropModal = ({ isOpen, imageSrc, onSave, onClose }) =>
           <div className="flex items-center gap-2">
             <button
               onClick={onClose}
-              className="px-3 py-1.5 text-xs font-semibold text-gray-400 hover:text-white"
+              className="px-3 py-1.5 text-xs font-semibold text-text-muted hover:text-text-primary"
             >
               Cancel
             </button>
             <button
               onClick={handleApply}
-              className="flex items-center gap-1.5 px-4 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold rounded-lg shadow shadow-indigo-600/30 transition-all cursor-pointer"
+              className="flex items-center gap-1.5 px-4 py-1.5 bg-accent hover:bg-accent-hover text-text-primary text-xs font-semibold rounded-lg shadow shadow-black/20 transition-all cursor-pointer"
             >
               <Check className="w-4 h-4" />
               <span>Save Cover</span>

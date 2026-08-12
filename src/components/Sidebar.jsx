@@ -93,13 +93,13 @@ export const Sidebar = memo(({ sidebarWidth, setSidebarWidth, isCollapsed, setIs
     <>
       <aside
         style={{ width: isCollapsed ? '64px' : `${sidebarWidth}px` }}
-        className="bg-[#101018] border-r border-white/10 flex flex-col justify-between p-3 select-none relative flex-shrink-0 transition-[width] duration-150 ease-out transform-gpu"
+        className="bg-bg-secondary border-r border-border-primary flex flex-col justify-between p-3 select-none relative flex-shrink-0 transition-[width] duration-150 ease-out transform-gpu"
       >
         {/* Resizer Drag Handle */}
         <div
           onMouseDown={() => setIsResizing(true)}
           title="Drag to resize sidebar width"
-          className="absolute top-0 right-0 bottom-0 w-1.5 cursor-col-resize hover:bg-indigo-500/50 transition-colors z-20"
+          className="absolute top-0 right-0 bottom-0 w-1.5 cursor-col-resize hover:bg-accent-hover/50 transition-colors z-20"
         ></div>
 
         {/* Navigation Sections */}
@@ -119,7 +119,7 @@ export const Sidebar = memo(({ sidebarWidth, setSidebarWidth, isCollapsed, setIs
                 }
               }}
               title={isCollapsed ? 'Expand Sidebar' : 'Collapse Sidebar'}
-              className={`p-1.5 text-gray-400 hover:text-white rounded-lg hover:bg-white/10 transition-colors cursor-pointer ${
+              className={`p-1.5 text-text-muted hover:text-white rounded-lg hover:bg-bg-hover transition-colors cursor-pointer ${
                 isCollapsed ? 'mx-auto' : 'ml-auto'
               }`}
             >
@@ -139,12 +139,12 @@ export const Sidebar = memo(({ sidebarWidth, setSidebarWidth, isCollapsed, setIs
                   title={item.label}
                   className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-medium transition-colors cursor-pointer active:scale-98 ${
                     isActive
-                      ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/30'
-                      : 'text-gray-400 hover:text-gray-200 hover:bg-white/5'
+                      ? 'bg-accent text-white shadow-md'
+                      : 'text-text-muted hover:text-text-primary hover:bg-bg-hover'
                   }`}
                 >
                   <div className="flex items-center gap-3 min-w-0">
-                    <Icon className={`w-4 h-4 flex-shrink-0 ${isActive ? 'text-white' : 'text-gray-400'}`} />
+                    <Icon className={`w-4 h-4 flex-shrink-0 ${isActive ? 'text-white' : 'text-text-muted'}`} />
                     {!isCollapsed && <span className="truncate">{item.label}</span>}
                   </div>
                   {!isCollapsed && item.count !== undefined && (
@@ -152,7 +152,7 @@ export const Sidebar = memo(({ sidebarWidth, setSidebarWidth, isCollapsed, setIs
                       className={`text-[10px] px-2 py-0.5 rounded-full flex-shrink-0 ${
                         isActive
                           ? 'bg-white/20 text-white'
-                          : 'bg-white/5 text-gray-500 border border-white/5'
+                          : 'bg-white/5 text-gray-500 border border-border-secondary'
                       }`}
                     >
                       {item.count}
@@ -180,11 +180,11 @@ export const Sidebar = memo(({ sidebarWidth, setSidebarWidth, isCollapsed, setIs
                   title={item.label}
                   className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-medium transition-colors cursor-pointer active:scale-98 ${
                     isActive
-                      ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/30'
-                      : 'text-gray-400 hover:text-gray-200 hover:bg-white/5'
+                      ? 'bg-accent text-white shadow-md'
+                      : 'text-text-muted hover:text-text-primary hover:bg-bg-hover'
                   }`}
                 >
-                  <Icon className={`w-4 h-4 flex-shrink-0 ${isActive ? 'text-white' : 'text-gray-400'}`} />
+                  <Icon className={`w-4 h-4 flex-shrink-0 ${isActive ? 'text-white' : 'text-text-muted'}`} />
                   {!isCollapsed && <span className="truncate">{item.label}</span>}
                 </button>
               );
@@ -195,8 +195,8 @@ export const Sidebar = memo(({ sidebarWidth, setSidebarWidth, isCollapsed, setIs
               title="Favorites"
               className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-medium transition-colors cursor-pointer active:scale-98 ${
                 activeTab === 'favorites'
-                  ? 'bg-pink-600 text-white shadow-md shadow-pink-600/30'
-                  : 'text-gray-400 hover:text-pink-400 hover:bg-pink-500/10'
+                  ? 'bg-accent text-white shadow-md'
+                  : 'text-text-muted hover:text-pink-400 hover:bg-pink-500/10'
               }`}
             >
               <div className="flex items-center gap-3 min-w-0">
@@ -213,19 +213,19 @@ export const Sidebar = memo(({ sidebarWidth, setSidebarWidth, isCollapsed, setIs
             <button
               onClick={() => setIsEqModalOpen(true)}
               title="Audio Equalizer"
-              className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-medium text-gray-400 hover:text-indigo-300 hover:bg-indigo-500/10 transition-colors cursor-pointer active:scale-98"
+              className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-medium text-text-muted hover:text-accent hover:bg-accent-hover/10 transition-colors cursor-pointer active:scale-98"
             >
-              <Sliders className="w-4 h-4 text-indigo-400 flex-shrink-0" />
+              <Sliders className="w-4 h-4 text-accent flex-shrink-0" />
               {!isCollapsed && <span className="truncate">Audio Equalizer</span>}
             </button>
           </div>
         </div>
 
         {/* Footer Actions */}
-        <div className="pt-4 border-t border-white/10 space-y-2">
+        <div className="pt-4 border-t border-border-primary space-y-2">
           {!isCollapsed && (
-            <div className="px-3 py-2 rounded-lg bg-white/5 border border-white/5 text-[11px] text-gray-400">
-              <div className="flex justify-between font-medium text-gray-300">
+            <div className="px-3 py-2 rounded-lg bg-white/5 border border-border-secondary text-[11px] text-text-muted">
+              <div className="flex justify-between font-medium text-text-secondary">
                 <span>Audio Library</span>
                 <span>{tracks.length} tracks</span>
               </div>

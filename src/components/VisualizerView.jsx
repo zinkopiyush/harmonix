@@ -144,20 +144,20 @@ export const VisualizerView = () => {
   }, [analyserNodeRef, isPlaying, mode]);
 
   return (
-    <div className="w-full h-full flex flex-col relative overflow-hidden bg-[#0f0f13]">
+    <div className="w-full h-full flex flex-col relative overflow-hidden bg-bg-primary">
       {/* Modes Controls Bar */}
-      <div className="absolute top-4 left-4 right-4 z-20 flex items-center justify-between bg-black/40 backdrop-blur-md p-3 rounded-2xl border border-white/10">
+      <div className="absolute top-4 left-4 right-4 z-20 flex items-center justify-between bg-bg-secondary backdrop-blur-md p-3 rounded-2xl border border-border-secondary">
         <div className="flex items-center gap-2">
-          <Activity className="w-5 h-5 text-indigo-400" />
-          <span className="font-bold text-sm text-gray-100">Audio Visualizer</span>
+          <Activity className="w-5 h-5 text-accent" />
+          <span className="font-bold text-sm text-text-primary">Audio Visualizer</span>
           {currentTrack && (
-            <span className="text-xs text-gray-400 truncate max-w-xs font-mono ml-2">
+            <span className="text-xs text-text-muted truncate max-w-xs font-mono ml-2">
               {currentTrack.title}
             </span>
           )}
         </div>
 
-        <div className="flex items-center gap-1 bg-white/10 p-1 rounded-xl">
+        <div className="flex items-center gap-1 bg-bg-tertiary p-1 rounded-xl">
           {[
             { id: 'spectrum', label: 'Spectrum', icon: Activity },
             { id: 'waveform', label: 'Waveform', icon: Radio },
@@ -171,8 +171,8 @@ export const VisualizerView = () => {
                 onClick={() => setMode(m.id)}
                 className={`flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-semibold transition-all ${
                   mode === m.id
-                    ? 'bg-indigo-600 text-white shadow'
-                    : 'text-gray-400 hover:text-white'
+                    ? 'bg-accent text-text-primary shadow'
+                    : 'text-text-muted hover:bg-bg-hover text-text-primary'
                 }`}
               >
                 <Icon className="w-3.5 h-3.5" />

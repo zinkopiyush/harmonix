@@ -1,6 +1,6 @@
-if (process.env.NODE_ENV === 'development') {
-  require('@reticlehq/electron/preload');
-}
+// if (process.env.NODE_ENV === 'development') {
+//   require('@reticlehq/electron/preload');
+// }
 
 const { contextBridge, ipcRenderer } = require('electron');
 

@@ -6,7 +6,8 @@ import path from 'path';
 import { reticle } from '@reticlehq/vite-plugin';
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [reticle(),
+  plugins: [
+    reticle(),
     react(),
     tailwindcss(),
   ],

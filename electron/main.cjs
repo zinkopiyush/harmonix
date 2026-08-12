@@ -32,10 +32,10 @@ function createWindow() {
     },
   });
 
-  if (process.env.NODE_ENV === 'development') {
-    const { installReticleCapture } = require('@reticlehq/electron/main');
-    installReticleCapture(mainWindow);
-  }
+  // if (process.env.NODE_ENV === 'development') {
+  //   const { installReticleCapture } = require('@reticlehq/electron/main');
+  //   installReticleCapture(mainWindow);
+  // }
 
   const isDev = process.env.NODE_ENV === 'development';
   if (isDev) {

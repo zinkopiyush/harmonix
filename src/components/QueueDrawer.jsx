@@ -53,18 +53,18 @@ export const QueueDrawer = () => {
   return (
     <div
       onClick={() => setIsQueueOpen(false)}
-      className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex justify-end animate-in fade-in duration-200"
+      className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm flex justify-end animate-in fade-in duration-200"
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="w-96 max-w-full h-full bg-[#12121c] border-l border-white/10 flex flex-col shadow-2xl animate-in slide-in-from-right duration-300 select-none"
+        className="w-96 max-w-full h-full bg-bg-secondary border-l border-border-primary flex flex-col shadow-2xl animate-in slide-in-from-right duration-300 select-none"
       >
         {/* Header */}
-        <div className="p-4 border-b border-white/10 bg-white/5">
+        <div className="p-4 border-b border-border-primary bg-bg-tertiary">
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-2">
-              <ListMusic className="w-5 h-5 text-indigo-400" />
-              <h3 className="font-bold text-sm text-white">Play Queue</h3>
+              <ListMusic className="w-5 h-5 text-accent" />
+              <h3 className="font-bold text-sm text-text-primary">Play Queue</h3>
             </div>
 
             <div className="flex items-center gap-2">
@@ -72,7 +72,7 @@ export const QueueDrawer = () => {
                 <button
                   onClick={clearQueue}
                   title="Clear Queue"
-                  className="p-1.5 text-gray-400 hover:text-red-400 rounded-lg hover:bg-white/10 transition-colors cursor-pointer text-xs font-semibold flex items-center gap-1"
+                  className="p-1.5 text-text-secondary hover:text-red-400 rounded-lg hover:bg-bg-hover transition-colors cursor-pointer text-xs font-semibold flex items-center gap-1"
                 >
                   <Trash2 className="w-3.5 h-3.5" />
                   <span>Clear</span>
@@ -82,7 +82,7 @@ export const QueueDrawer = () => {
               <button
                 data-testid="queue-close-btn"
                 onClick={() => setIsQueueOpen(false)}
-                className="p-1.5 text-gray-400 hover:text-white rounded-lg hover:bg-white/10 transition-colors cursor-pointer"
+                className="p-1.5 text-text-secondary hover:text-text-primary rounded-lg hover:bg-bg-hover transition-colors cursor-pointer"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -93,7 +93,7 @@ export const QueueDrawer = () => {
             <button
               onClick={() => { setActiveTab('queue'); setDisplayCount(20); }}
               className={`flex-1 py-1.5 text-xs font-semibold rounded-md transition-colors ${
-                activeTab === 'queue' ? 'bg-white/15 text-white shadow' : 'text-gray-400 hover:text-gray-200'
+                activeTab === 'queue' ? 'bg-white/15 text-text-primary shadow' : 'text-text-secondary hover:text-gray-200'
               }`}
             >
               Up Next ({remainingCount})
@@ -101,7 +101,7 @@ export const QueueDrawer = () => {
             <button
               onClick={() => { setActiveTab('history'); setDisplayCount(20); }}
               className={`flex-1 py-1.5 text-xs font-semibold rounded-md transition-colors ${
-                activeTab === 'history' ? 'bg-white/15 text-white shadow' : 'text-gray-400 hover:text-gray-200'
+                activeTab === 'history' ? 'bg-white/15 text-text-primary shadow' : 'text-text-secondary hover:text-gray-200'
               }`}
             >
               History ({historyCount})
@@ -117,9 +117,9 @@ export const QueueDrawer = () => {
         >
           {activeTab === 'queue' ? (
             remainingCount === 0 ? (
-              <div className="h-full flex flex-col items-center justify-center text-center text-gray-500 p-6">
+              <div className="h-full flex flex-col items-center justify-center text-center text-text-muted p-6">
                 <Music className="w-12 h-12 mb-3 opacity-30" />
-                <p className="text-sm font-semibold text-gray-400">Queue is Empty</p>
+                <p className="text-sm font-semibold text-text-secondary">Queue is Empty</p>
                 <p className="text-xs mt-1">Play a song or add tracks to build your queue</p>
               </div>
             ) : (
@@ -157,12 +157,12 @@ export const QueueDrawer = () => {
                     onDoubleClick={() => playTrack(track, queue, actualIdx)}
                     className={`flex items-center justify-between p-2.5 rounded-xl border transition-all cursor-pointer group ${
                       isCurrent
-                        ? 'bg-indigo-600/20 border-indigo-500/40 text-indigo-300'
-                        : 'bg-white/5 border-white/5 hover:bg-white/10 text-gray-200'
-                    } ${dragOverIdx === actualIdx ? 'border-indigo-400 border-t-2 bg-indigo-500/10' : ''} ${draggedIdx === actualIdx ? 'opacity-50' : ''}`}
+                        ? 'bg-accent/20 border-accent/40 text-accent'
+                        : 'bg-bg-tertiary border-border-secondary hover:bg-bg-hover text-gray-200'
+                    } ${dragOverIdx === actualIdx ? 'border-accent border-t-2 bg-accent-hover/10' : ''} ${draggedIdx === actualIdx ? 'opacity-50' : ''}`}
                   >
                     <div className="flex items-center gap-3 min-w-0 flex-1">
-                      <span className="text-[11px] font-mono text-gray-500 w-4 text-right">
+                      <span className="text-[11px] font-mono text-text-muted w-4 text-right">
                         {actualIdx + 1}
                       </span>
 
@@ -170,26 +170,26 @@ export const QueueDrawer = () => {
                         {track.picture ? (
                           <img src={track.picture} alt="" className="w-full h-full object-cover" />
                         ) : (
-                          <Music className="w-4 h-4 text-gray-400" />
+                          <Music className="w-4 h-4 text-text-secondary" />
                         )}
                       </div>
 
                       <div className="min-w-0 flex-1">
-                        <h5 className="text-xs font-bold truncate group-hover:text-indigo-400 transition-colors">
+                        <h5 className="text-xs font-bold truncate group-hover:text-accent transition-colors">
                           {track.title}
                         </h5>
-                        <p className="text-[10px] text-gray-400 truncate">{track.artist}</p>
+                        <p className="text-[10px] text-text-secondary truncate">{track.artist}</p>
                       </div>
                     </div>
 
                     <div className="flex items-center gap-1.5 ml-2">
-                      <span className="text-[10px] font-mono text-gray-500">
+                      <span className="text-[10px] font-mono text-text-muted">
                         {formatTime(track.duration)}
                       </span>
                       <button
                         onClick={() => removeFromQueue(actualIdx)}
                         title="Remove from queue"
-                        className="p-1 text-gray-400 hover:text-red-400 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
+                        className="p-1 text-text-secondary hover:text-red-400 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
                       >
                         <Trash2 className="w-3.5 h-3.5" />
                       </button>
@@ -200,9 +200,9 @@ export const QueueDrawer = () => {
             )
           ) : (
             historyCount === 0 ? (
-              <div className="h-full flex flex-col items-center justify-center text-center text-gray-500 p-6">
+              <div className="h-full flex flex-col items-center justify-center text-center text-text-muted p-6">
                 <ListMusic className="w-12 h-12 mb-3 opacity-30" />
-                <p className="text-sm font-semibold text-gray-400">History is Empty</p>
+                <p className="text-sm font-semibold text-text-secondary">History is Empty</p>
                 <p className="text-xs mt-1">Recently played tracks will appear here</p>
               </div>
             ) : (
@@ -213,22 +213,22 @@ export const QueueDrawer = () => {
                     const foundIdx = queue.findIndex((t) => t.id === track.id);
                     playTrack(track, queue, Math.max(0, foundIdx));
                   }}
-                  className="flex items-center justify-between p-2.5 rounded-xl border border-white/5 bg-white/5 hover:bg-white/10 transition-all cursor-pointer group text-gray-400"
+                  className="flex items-center justify-between p-2.5 rounded-xl border border-border-secondary bg-bg-tertiary hover:bg-bg-hover transition-all cursor-pointer group text-text-secondary"
                 >
                   <div className="flex items-center gap-3 min-w-0 flex-1">
                     <div className="w-9 h-9 rounded-lg overflow-hidden flex-shrink-0 bg-black/20 flex items-center justify-center grayscale opacity-60">
                       {track.picture ? (
                         <img src={track.picture} alt="" className="w-full h-full object-cover" />
                       ) : (
-                        <Music className="w-4 h-4 text-gray-500" />
+                        <Music className="w-4 h-4 text-text-muted" />
                       )}
                     </div>
 
                     <div className="min-w-0 flex-1">
-                      <h5 className="text-xs font-bold truncate group-hover:text-white transition-colors">
+                      <h5 className="text-xs font-bold truncate group-hover:text-text-primary transition-colors">
                         {track.title}
                       </h5>
-                      <p className="text-[10px] text-gray-500 truncate">{track.artist}</p>
+                      <p className="text-[10px] text-text-muted truncate">{track.artist}</p>
                     </div>
                   </div>
 

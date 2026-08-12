@@ -59,7 +59,7 @@ export const MiniPlayer = () => {
   const progressPercent = duration ? (currentTime / duration) * 100 : 0;
 
   return (
-    <div className="w-screen h-screen bg-[#0d0d14] text-white flex flex-col justify-between p-5 select-none relative overflow-hidden titlebar-drag">
+    <div className="w-screen h-screen bg-bg-primary text-text-primary flex flex-col justify-between p-5 select-none relative overflow-hidden titlebar-drag">
       {/* Dynamic Background Glow */}
       <div
         className="absolute inset-0 opacity-20 blur-3xl pointer-events-none"
@@ -69,10 +69,10 @@ export const MiniPlayer = () => {
       {/* Top Header Bar */}
       <div className="relative z-10 flex items-center justify-between titlebar-no-drag" style={{ WebkitAppRegion: 'no-drag' }}>
         <div className="flex items-center gap-2">
-          <div className="w-6 h-6 rounded-lg bg-indigo-600 flex items-center justify-center text-white shadow">
+          <div className="w-6 h-6 rounded-lg bg-accent flex items-center justify-center text-text-primary shadow">
             <Music2 className="w-3.5 h-3.5" />
           </div>
-          <span className="text-xs font-extrabold tracking-wide text-indigo-300">
+          <span className="text-xs font-extrabold tracking-wide text-accent">
             Harmonix
           </span>
         </div>
@@ -81,7 +81,7 @@ export const MiniPlayer = () => {
           <button
             onClick={handleExpandApp}
             title="Expand Window"
-            className="p-1 text-gray-400 hover:text-white rounded hover:bg-white/10 transition-colors cursor-pointer"
+            className="p-1 text-text-muted hover:text-text-primary rounded hover:bg-bg-hover transition-colors cursor-pointer"
           >
             <Maximize2 className="w-3.5 h-3.5" />
           </button>
@@ -89,7 +89,7 @@ export const MiniPlayer = () => {
           <button
             onClick={handleCloseApp}
             title="Close Window"
-            className="p-1 text-gray-400 hover:text-red-400 rounded hover:bg-red-500/10 transition-colors cursor-pointer"
+            className="p-1 text-text-muted hover:text-red-400 rounded hover:bg-red-500/10 transition-colors cursor-pointer"
           >
             <X className="w-4 h-4" />
           </button>
@@ -99,7 +99,7 @@ export const MiniPlayer = () => {
       {/* Center 1:1 Square Album Cover Artwork */}
       <div className="relative z-10 flex flex-col items-center text-center my-auto px-2">
         <div
-          className="w-56 h-56 rounded-2xl overflow-hidden shadow-2xl border border-white/15 relative group mb-4 flex-shrink-0"
+          className="w-56 h-56 rounded-2xl overflow-hidden shadow-2xl border border-border-primary relative group mb-4 flex-shrink-0"
           style={{ background: albumGradient }}
         >
           {currentTrack && currentTrack.picture && !imgError ? (
@@ -110,7 +110,7 @@ export const MiniPlayer = () => {
               className="w-full h-full object-cover"
             />
           ) : (
-            <div className="w-full h-full flex items-center justify-center text-white/80">
+            <div className="w-full h-full flex items-center justify-center text-text-primary/80">
               <Music className="w-16 h-16" />
             </div>
           )}
@@ -119,24 +119,24 @@ export const MiniPlayer = () => {
         {/* Song Title & Artist */}
         {currentTrack ? (
           <div className="w-full max-w-[260px]">
-            <h3 className="font-extrabold text-sm text-gray-100 truncate">{currentTrack.title}</h3>
-            <p className="text-xs text-gray-400 truncate mt-0.5 font-medium">{currentTrack.artist}</p>
+            <h3 className="font-extrabold text-sm text-text-primary truncate">{currentTrack.title}</h3>
+            <p className="text-xs text-text-muted truncate mt-0.5 font-medium">{currentTrack.artist}</p>
           </div>
         ) : (
           <div>
-            <h3 className="font-extrabold text-sm text-gray-200">No Track Playing</h3>
-            <p className="text-xs text-gray-500 mt-0.5">Select a song to play</p>
+            <h3 className="font-extrabold text-sm text-text-primary">No Track Playing</h3>
+            <p className="text-xs text-text-muted mt-0.5">Select a song to play</p>
           </div>
         )}
       </div>
 
       {/* Bottom Timeline Progress Slider & Playback Controls */}
       <div className="relative z-10 space-y-3 titlebar-no-drag" style={{ WebkitAppRegion: 'no-drag' }}>
-        <div className="w-full border-t border-white/10 pt-2"></div>
+        <div className="w-full border-t border-border-primary pt-2"></div>
 
         {/* Timeline Seek Bar */}
         <div className="flex items-center gap-2.5">
-          <span className="text-[10px] font-mono text-gray-400 w-8 text-right">
+          <span className="text-[10px] font-mono text-text-muted w-8 text-right">
             {formatTime(currentTime)}
           </span>
 
@@ -146,13 +146,13 @@ export const MiniPlayer = () => {
             max={duration || 100}
             value={currentTime}
             onChange={(e) => seekTo(parseFloat(e.target.value))}
-            className="flex-1 cursor-pointer"
+            className="flex-1 custom-slider cursor-pointer"
             style={{
-              background: `linear-gradient(to right, #6366f1 0%, #6366f1 ${progressPercent}%, rgba(255, 255, 255, 0.15) ${progressPercent}%, rgba(255, 255, 255, 0.15) 100%)`,
+              background: `linear-gradient(to right, var(--accent) 0%, var(--accent) ${progressPercent}%, var(--border-secondary) ${progressPercent}%, var(--border-secondary) 100%)`,
             }}
           />
 
-          <span className="text-[10px] font-mono text-gray-400 w-8">
+          <span className="text-[10px] font-mono text-text-muted w-8">
             {formatTime(duration)}
           </span>
         </div>
@@ -162,9 +162,9 @@ export const MiniPlayer = () => {
           <div
             onWheel={handleVolumeWheel}
             title="Scroll mouse wheel to adjust volume"
-            className="flex items-center gap-1 cursor-pointer hover:bg-white/5 p-1 rounded-lg"
+            className="flex items-center gap-1 cursor-pointer hover:bg-bg-hover p-1 rounded-lg"
           >
-            <button onClick={toggleMute} className="text-gray-400 hover:text-white cursor-pointer">
+            <button onClick={toggleMute} className="text-text-muted hover:text-text-primary cursor-pointer">
               {isMuted || volume === 0 ? (
                 <VolumeX className="w-4 h-4 text-red-400" />
               ) : (
@@ -177,14 +177,14 @@ export const MiniPlayer = () => {
             <button
               onClick={handlePrevTrack}
               title="Previous Track (Shift + Left Arrow)"
-              className="text-gray-300 hover:text-white transition-colors cursor-pointer"
+              className="text-text-muted hover:text-text-primary transition-colors cursor-pointer"
             >
               <SkipBack className="w-6 h-6 fill-current" />
             </button>
 
             <button
               onClick={togglePlay}
-              className="w-12 h-12 rounded-full bg-indigo-600 hover:bg-indigo-500 text-white flex items-center justify-center shadow-lg shadow-indigo-600/50 hover:scale-105 transition-all cursor-pointer"
+              className="w-12 h-12 rounded-full bg-accent hover:bg-accent-hover text-text-primary flex items-center justify-center shadow-lg shadow-black/20 hover:scale-105 transition-all cursor-pointer"
             >
               {isPlaying ? (
                 <Pause className="w-6 h-6 fill-current" />
@@ -196,7 +196,7 @@ export const MiniPlayer = () => {
             <button
               onClick={() => handleNextTrack(false)}
               title="Next Track (Shift + Right Arrow)"
-              className="text-gray-300 hover:text-white transition-colors cursor-pointer"
+              className="text-text-muted hover:text-text-primary transition-colors cursor-pointer"
             >
               <SkipForward className="w-6 h-6 fill-current" />
             </button>

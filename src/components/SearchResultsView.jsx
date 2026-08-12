@@ -27,17 +27,17 @@ export const SearchResultsView = () => {
   const matchingPlaylists = playlists.filter((p) => p.name.toLowerCase().includes(query));
 
   return (
-    <div className="flex-1 flex flex-col overflow-hidden bg-[#0f0f13]">
+    <div className="flex-1 flex flex-col overflow-hidden bg-bg-primary">
       {/* Search Header */}
       <div className="px-6 py-4 border-b border-white/5 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-lg bg-indigo-500/20 text-indigo-400 border border-indigo-500/30 flex items-center justify-center">
+          <div className="w-8 h-8 rounded-lg bg-accent-hover/20 text-accent border border-accent/30 flex items-center justify-center">
             <Search className="w-4 h-4" />
           </div>
           <div>
             <h2 className="text-xl font-bold text-gray-100">Search Results</h2>
             <p className="text-xs text-gray-400 mt-0.5">
-              Showing matches for <span className="text-indigo-400 font-semibold">"{searchQuery}"</span>
+              Showing matches for <span className="text-accent font-semibold">"{searchQuery}"</span>
             </p>
           </div>
         </div>
@@ -66,7 +66,7 @@ export const SearchResultsView = () => {
                     setActiveTab('artists');
                     setSearchQuery('');
                   }}
-                  className="glass-card p-3 rounded-xl flex items-center gap-3 cursor-pointer group hover:border-indigo-500/40"
+                  className="glass-card p-3 rounded-xl flex items-center gap-3 cursor-pointer group hover:border-accent/40"
                 >
                   <div
                     className="w-10 h-10 rounded-full flex items-center justify-center text-white/80 overflow-hidden border border-white/10"
@@ -79,7 +79,7 @@ export const SearchResultsView = () => {
                     )}
                   </div>
                   <div className="min-w-0 flex-1">
-                    <p className="font-bold text-xs text-gray-100 group-hover:text-indigo-300 truncate">
+                    <p className="font-bold text-xs text-gray-100 group-hover:text-accent truncate">
                       {artist.name}
                     </p>
                     <p className="text-[10px] text-gray-400 font-mono mt-0.5">
@@ -106,7 +106,7 @@ export const SearchResultsView = () => {
                     setActiveTab('albums');
                     setSearchQuery('');
                   }}
-                  className="glass-card p-3 rounded-xl flex items-center gap-3 cursor-pointer group hover:border-indigo-500/40"
+                  className="glass-card p-3 rounded-xl flex items-center gap-3 cursor-pointer group hover:border-accent/40"
                 >
                   <div
                     className="w-10 h-10 rounded-lg flex items-center justify-center text-white/80 overflow-hidden border border-white/10"
@@ -119,7 +119,7 @@ export const SearchResultsView = () => {
                     )}
                   </div>
                   <div className="min-w-0 flex-1">
-                    <p className="font-bold text-xs text-gray-100 group-hover:text-indigo-300 truncate">
+                    <p className="font-bold text-xs text-gray-100 group-hover:text-accent truncate">
                       {album.name}
                     </p>
                     <p className="text-[10px] text-gray-400 truncate mt-0.5">{album.artist}</p>
@@ -144,19 +144,19 @@ export const SearchResultsView = () => {
                     setActiveTab('playlists');
                     setSearchQuery('');
                   }}
-                  className="glass-card p-3 rounded-xl flex items-center gap-3 cursor-pointer group hover:border-indigo-500/40"
+                  className="glass-card p-3 rounded-xl flex items-center gap-3 cursor-pointer group hover:border-accent/40"
                 >
                   <div
-                    className="w-10 h-10 rounded-lg flex items-center justify-center text-white/80 overflow-hidden border border-white/10 bg-[#14141f]"
+                    className="w-10 h-10 rounded-lg flex items-center justify-center text-text-primary overflow-hidden border border-border-secondary bg-bg-secondary"
                   >
                     {pl.picture ? (
                       <img src={pl.picture} alt="" className="w-full h-full object-cover" />
                     ) : (
-                      <ListMusic className="w-5 h-5 text-indigo-400" />
+                      <ListMusic className="w-5 h-5 text-accent" />
                     )}
                   </div>
                   <div className="min-w-0 flex-1">
-                    <p className="font-bold text-xs text-gray-100 group-hover:text-indigo-300 truncate">
+                    <p className="font-bold text-xs text-gray-100 group-hover:text-accent truncate">
                       {pl.name}
                     </p>
                     <p className="text-[10px] text-gray-400 font-mono mt-0.5">
